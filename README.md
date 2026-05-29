@@ -31,7 +31,7 @@ cd PromptVault
 python server.py
 ```
 
-Luego abre tu navegador en **[http://localhost:8080](http://localhost:8080)** 🎉
+Luego abre tu navegador en **[http://localhost:8380](http://localhost:8380)** 🎉
 
 ### Opción B — Sin servidor (modo offline, guarda en el navegador)
 
