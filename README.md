@@ -1,4 +1,4 @@
-# 🗂️ Repositorio de Prácticas: Gestión de Librerías de Prompts y Meta-Prompting
+# 🔐 PromptVault — Gestión Inteligente de Librerías de Prompts
 
 <div align="center">
 
@@ -10,7 +10,7 @@
 
 **Desarrollado en el marco del programa [FormaTEC](https://www.fundacionsantisimatrinidad.com) de la Fundación Santísima Trinidad y el Gobierno de la Provincia de Mendoza.**
 
-*Plataforma interactiva para la enseñanza práctica de Ingeniería de Prompts, Gobernanza con SemVer y Auditoría con IA Generativa.*
+*La bóveda inteligente para diseñar, versionar, auditar y gobernar tu biblioteca de prompts con IA Generativa.*
 
 </div>
 
