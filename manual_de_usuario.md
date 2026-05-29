@@ -1,8 +1,8 @@
-# Manual de Usuario: Prompt Mastery & Repositorios Dashboard
+# Manual de Usuario: PromptVault
 
-**Programa FormaTEC | Fundación Santísima Trinidad | Gobierno de la Provincia de Mendoza**
+**Autor: Gabriel Sessa &mdash; Licencia GNU GPL v3**
 
-Este manual describe el funcionamiento, la arquitectura y el flujo operativo de la plataforma interactiva **Prompt Mastery & Repositorios Dashboard**, desarrollada bajo la licencia libre **GNU GPL v3** por **Gabriel Sessa (2026)**.
+Este manual describe el funcionamiento, la arquitectura y el flujo operativo de **PromptVault**, plataforma de gestión inteligente de bibliotecas de prompts, desarrollada bajo la licencia libre **GNU GPL v3** por **Gabriel Sessa (2026)**.
 
 ---
 

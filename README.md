@@ -6,9 +6,7 @@
 ![Python](https://img.shields.io/badge/Python-3.10%2B-yellow.svg)
 ![HTML](https://img.shields.io/badge/Frontend-HTML%20%2B%20JS-orange.svg)
 ![SQLite](https://img.shields.io/badge/DB-SQLite-lightgrey.svg)
-![FormaTEC](https://img.shields.io/badge/Programa-FormaTEC-green.svg)
-
-**Desarrollado en el marco del programa [FormaTEC](https://www.fundacionsantisimatrinidad.com) de la Fundación Santísima Trinidad y el Gobierno de la Provincia de Mendoza.**
+![Author](https://img.shields.io/badge/Autor-Gabriel%20Sessa-purple.svg)
 
 *La bóveda inteligente para diseñar, versionar, auditar y gobernar tu biblioteca de prompts con IA Generativa.*
 

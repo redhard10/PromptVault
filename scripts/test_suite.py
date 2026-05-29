@@ -114,8 +114,8 @@ Hola {temp_var}, esto es una plantilla.""")
             # Limpiar archivo MD temporal
             os.remove(temp_md_path)
 
-    def test_institutional_references_and_copyright(self):
-        """Asegura que se mencionen las instituciones FormaTEC, Santísima Trinidad y Mendoza, y no existan copyright."""
+    def test_author_attribution_and_copyright(self):
+        """Asegura que el proyecto mencione la autoría de Gabriel Sessa y la licencia GPL, y no tenga copyright tradicional."""
         # 1. Comprobación de index.html
         html_path = os.path.join(self.project_root, "index.html")
         self.assertTrue(os.path.exists(html_path))
@@ -123,10 +123,10 @@ Hola {temp_var}, esto es una plantilla.""")
         with open(html_path, 'r', encoding='utf-8') as f:
             html_content = f.read()
             
-        # Comprobar menciones institucionales
-        self.assertIn("FormaTEC", html_content, "index.html debe mencionar 'FormaTEC'")
-        self.assertIn("Santísima Trinidad", html_content, "index.html debe mencionar 'Fundación Santísima Trinidad'")
-        self.assertIn("Mendoza", html_content, "index.html debe mencionar 'Gobierno de la Provincia de Mendoza'")
+        # Comprobar menciones de autoría y proyecto
+        self.assertIn("Gabriel Sessa", html_content, "index.html debe mencionar al autor 'Gabriel Sessa'")
+        self.assertIn("PromptVault", html_content, "index.html debe mencionar el nombre del proyecto 'PromptVault'")
+        self.assertIn("GPL", html_content, "index.html debe mencionar la licencia GPL")
         
         # Comprobar copyright: no debe tener © ni "Copyright"
         self.assertNotIn("©", html_content, "index.html no debe tener símbolos de copyright ©")
@@ -139,9 +139,9 @@ Hola {temp_var}, esto es una plantilla.""")
         with open(readme_path, 'r', encoding='utf-8') as f:
             readme_content = f.read()
             
-        self.assertIn("FormaTEC", readme_content, "README.md debe mencionar 'FormaTEC'")
-        self.assertIn("Santísima Trinidad", readme_content, "README.md debe mencionar 'Fundación Santísima Trinidad'")
-        self.assertIn("Mendoza", readme_content, "README.md debe mencionar 'Gobierno de la Provincia de Mendoza'")
+        self.assertIn("Gabriel Sessa", readme_content, "README.md debe mencionar al autor 'Gabriel Sessa'")
+        self.assertIn("PromptVault", readme_content, "README.md debe mencionar el nombre del proyecto 'PromptVault'")
+        self.assertIn("GPL", readme_content, "README.md debe mencionar la licencia GPL")
         self.assertNotIn("©", readme_content, "README.md no debe tener símbolos de copyright ©")
         self.assertNotIn("Copyright", readme_content, "README.md no debe tener referencias a Copyright")
 
