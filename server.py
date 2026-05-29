@@ -9,7 +9,7 @@ import os
 import urllib.parse
 import sys
 
-PORT = 8000
+PORT = 8080
 DB_FILE = 'prompts.db'
 
 def get_db_connection():
