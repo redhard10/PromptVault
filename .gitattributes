@@ -1,0 +1,23 @@
+# Normalizar saltos de línea en todos los archivos de texto al hacer commit
+# Git convierte a LF en el repositorio, y a CRLF en Windows al hacer checkout
+* text=auto
+
+# Forzar LF en archivos de código (compatibilidad multiplataforma)
+*.py text eol=lf
+*.html text eol=lf
+*.js text eol=lf
+*.css text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.txt text eol=lf
+
+# Archivos binarios — sin conversión de saltos de línea
+*.db binary
+*.sqlite binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary

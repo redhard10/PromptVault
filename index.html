@@ -1,0 +1,3912 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prompt Mastery & Repositorios Dashboard</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-main: #0B0F19;
+      --bg-card: rgba(17, 24, 39, 0.7);
+      --bg-input: #1F2937;
+      --border-color: rgba(255, 255, 255, 0.08);
+      --text-main: #F3F4F6;
+      --text-muted: #9CA3AF;
+      --primary: #6366F1;
+      --primary-hover: #4F46E5;
+      --primary-glow: rgba(99, 102, 241, 0.15);
+      --success: #10B981;
+      --success-glow: rgba(16, 185, 129, 0.1);
+      --warning: #F59E0B;
+      --warning-glow: rgba(245, 158, 11, 0.1);
+      --error: #EF4444;
+      --error-glow: rgba(239, 68, 68, 0.1);
+      --font-sans: 'Outfit', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --radius: 12px;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      line-height: 1.6;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.1) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.05) 0px, transparent 50%);
+    }
+
+    /* Layout structure */
+    .app-container {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      min-height: 100vh;
+    }
+
+    /* Sidebar Navigation */
+    aside {
+      background-color: rgba(17, 24, 39, 0.95);
+      border-right: 1px solid var(--border-color);
+      padding: 2rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .brand-icon {
+      background: linear-gradient(135deg, var(--primary), var(--success));
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.25rem;
+      color: white;
+      box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
+    }
+
+    .brand-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      background: linear-gradient(to right, #ffffff, #9CA3AF);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .nav-menu {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      list-style: none;
+    }
+
+    .nav-item button {
+      width: 100%;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      padding: 0.85rem 1rem;
+      border-radius: var(--radius);
+      cursor: pointer;
+      text-align: left;
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      transition: var(--transition);
+    }
+
+    .nav-item button:hover {
+      color: var(--text-main);
+      background-color: rgba(255, 255, 255, 0.03);
+    }
+
+    .nav-item.active button {
+      color: white;
+      background-color: var(--primary);
+      box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+    }
+
+    .sidebar-footer {
+      margin-top: auto;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border-color);
+      padding-top: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .sidebar-footer .inst-name {
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .sidebar-footer .prog-name {
+      color: var(--success);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-size: 0.7rem;
+    }
+
+    /* Main Content Area */
+    main {
+      padding: 3rem;
+      overflow-y: auto;
+      max-width: 1400px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    header {
+      margin-bottom: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 1.5rem;
+    }
+
+    h1 {
+      font-size: 2.25rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(to right, #ffffff, #cbd5e1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .header-desc {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+    }
+
+    .institution-header {
+      text-align: right;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.15rem;
+    }
+
+    .institution-header strong {
+      color: white;
+    }
+
+    /* Active Prompt Banner */
+    .active-prompt-banner {
+      display: flex;
+      background: rgba(99, 102, 241, 0.05);
+      border: 1px solid rgba(99, 102, 241, 0.2);
+      padding: 1rem 1.5rem;
+      border-radius: var(--radius);
+      margin-bottom: 2.5rem;
+      align-items: center;
+      justify-content: space-between;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 4px 20px rgba(99, 102, 241, 0.1);
+      animation: fadeIn 0.4s ease-out;
+    }
+
+    .active-prompt-info {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .active-prompt-actions {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .active-prompt-actions span {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-right: 0.5rem;
+    }
+
+    /* Common Card Styling */
+    .card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 2rem;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      margin-bottom: 2rem;
+      transition: var(--transition);
+    }
+
+    .card:hover {
+      border-color: rgba(99, 102, 241, 0.2);
+    }
+
+    .card-title {
+      font-size: 1.35rem;
+      font-weight: 600;
+      margin-bottom: 1.25rem;
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* Info card helper boxes */
+    .info-box {
+      background-color: rgba(99, 102, 241, 0.05);
+      border-left: 4px solid var(--primary);
+      padding: 1.25rem;
+      border-radius: 6px;
+      margin-bottom: 1.5rem;
+      font-size: 0.9rem;
+    }
+
+    .info-box h4 {
+      color: white;
+      margin-bottom: 0.25rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .info-box p {
+      color: var(--text-muted);
+    }
+
+    /* Concept glossary grid */
+    .concept-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .concept-card {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 1.25rem;
+      transition: var(--transition);
+    }
+
+    .concept-card:hover {
+      background: rgba(255, 255, 255, 0.04);
+      border-color: rgba(99, 102, 241, 0.2);
+    }
+
+    .concept-tag {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    .concept-title {
+      font-weight: 600;
+      color: white;
+      margin-bottom: 0.35rem;
+      font-size: 0.95rem;
+    }
+
+    .concept-desc {
+      font-size: 0.825rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* FAQ Details tags */
+    details {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      margin-bottom: 0.75rem;
+      padding: 0.85rem 1.25rem;
+      transition: var(--transition);
+    }
+
+    details[open] {
+      border-color: var(--primary);
+      background: rgba(99, 102, 241, 0.04);
+    }
+
+    summary {
+      font-weight: 600;
+      color: white;
+      cursor: pointer;
+      outline: none;
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    summary::-webkit-details-marker {
+      display: none;
+    }
+
+    summary::after {
+      content: '+';
+      font-size: 1.25rem;
+      color: var(--primary);
+      font-weight: 700;
+      transition: var(--transition);
+    }
+
+    details[open] summary::after {
+      content: '−';
+      transform: rotate(180deg);
+    }
+
+    .faq-answer {
+      margin-top: 0.75rem;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      line-height: 1.6;
+      border-top: 1px solid var(--border-color);
+      padding-top: 0.75rem;
+    }
+
+    /* Versioning grid chart */
+    .version-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      font-size: 0.85rem;
+    }
+
+    .version-table th, .version-table td {
+      border: 1px solid var(--border-color);
+      padding: 0.75rem;
+      text-align: left;
+    }
+
+    .version-table th {
+      background: rgba(255, 255, 255, 0.04);
+      color: white;
+    }
+
+    /* Panels visibility */
+    .panel {
+      display: none;
+      animation: fadeIn 0.4s ease-out;
+    }
+
+    .panel.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .badge-primary { background-color: rgba(99, 102, 241, 0.15); color: #818CF8; border: 1px solid rgba(99, 102, 241, 0.3); }
+    .badge-success { background-color: rgba(16, 185, 129, 0.15); color: #34D399; border: 1px solid rgba(16, 185, 129, 0.3); }
+    .badge-warning { background-color: rgba(245, 158, 11, 0.15); color: #FBBF24; border: 1px solid rgba(245, 158, 11, 0.3); }
+    .badge-secondary { background-color: rgba(255, 255, 255, 0.05); color: var(--text-muted); border: 1px solid rgba(255, 255, 255, 0.1); }
+
+    /* Input & Forms Controls */
+    label {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+      color: var(--text-main);
+    }
+
+    input[type="text"], textarea, select {
+      width: 100%;
+      background-color: var(--bg-input);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 0.85rem 1rem;
+      color: white;
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
+      transition: var(--transition);
+      margin-bottom: 1.25rem;
+    }
+
+    input[type="text"]:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
+    }
+
+    textarea.code-editor {
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    .btn {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 0.85rem 1.75rem;
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: var(--transition);
+    }
+
+    .btn:hover {
+      background-color: var(--primary-hover);
+      box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+    }
+
+    .btn-secondary {
+      background-color: rgba(255, 255, 255, 0.08);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+    }
+
+    .btn-secondary:hover {
+      background-color: rgba(255, 255, 255, 0.12);
+      box-shadow: none;
+    }
+
+    .btn-success {
+      background-color: var(--success);
+    }
+
+    .btn-success:hover {
+      background-color: #059669;
+      box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+    }
+
+    /* Grid layouts */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+
+    /* Prompt Library Catalog Panel */
+    .prompt-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .prompt-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.25rem;
+      background-color: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .prompt-row:hover {
+      background-color: rgba(255, 255, 255, 0.05);
+      border-color: rgba(99, 102, 241, 0.3);
+      transform: translateX(4px);
+    }
+
+    .prompt-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .prompt-name {
+      font-weight: 600;
+      color: white;
+    }
+
+    .prompt-meta {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      display: flex;
+      gap: 1rem;
+    }
+
+    /* Split code layout */
+    .split-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      height: calc(100vh - 280px);
+      min-height: 500px;
+    }
+
+    .editor-section, .preview-section {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .editor-wrapper, .preview-wrapper {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .preview-box {
+      flex: 1;
+      background-color: rgba(0, 0, 0, 0.2);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 1.5rem;
+      overflow-y: auto;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: #E5E7EB;
+      white-space: pre-wrap;
+    }
+
+    .preview-actions {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .copy-btn {
+      background-color: rgba(17, 24, 39, 0.8);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: var(--transition);
+    }
+
+    .copy-btn:hover {
+      color: white;
+      border-color: var(--primary);
+      background-color: var(--primary);
+    }
+
+    /* Variables Form Styles */
+    .variables-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      padding: 1.5rem;
+      background-color: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+    }
+
+    .var-field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    /* Exercises Panel Styles */
+    .exercise-tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.75rem;
+    }
+
+    .ex-tab {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      font-family: var(--font-sans);
+      font-weight: 500;
+      font-size: 0.95rem;
+      transition: var(--transition);
+      border-radius: 6px 6px 0 0;
+    }
+
+    .ex-tab:hover {
+      color: var(--text-main);
+    }
+
+    .ex-tab.active {
+      color: var(--primary);
+      border-bottom: 2px solid var(--primary);
+    }
+
+    .exercise-details {
+      display: none;
+    }
+
+    .exercise-details.active {
+      display: block;
+    }
+
+    .validation-box {
+      margin-top: 1.5rem;
+      padding: 1.5rem;
+      border-radius: var(--radius);
+      border: 1px solid var(--border-color);
+      display: none;
+    }
+
+    .validation-box.success {
+      display: block;
+      background-color: var(--success-glow);
+      border-color: rgba(16, 185, 129, 0.3);
+      color: #34D399;
+    }
+
+    .validation-box.error {
+      display: block;
+      background-color: var(--error-glow);
+      border-color: rgba(239, 68, 68, 0.3);
+      color: #F87171;
+    }
+
+    .validation-title {
+      font-weight: 700;
+      font-size: 1.05rem;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .validation-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.25rem;
+      font-size: 0.9rem;
+    }
+
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      animation: fadeIn 0.2s ease-out;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background-color: #0F172A;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      width: 90%;
+      max-width: 800px;
+      max-height: 85vh;
+      overflow-y: auto;
+      padding: 2.5rem;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+      position: relative;
+    }
+
+    .close-modal {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 1.5rem;
+      transition: var(--transition);
+    }
+
+    .close-modal:hover {
+      color: white;
+    }
+
+    .prompt-viewer-title {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: white;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      background-color: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .meta-item {
+      font-size: 0.9rem;
+    }
+
+    .meta-label {
+      color: var(--text-muted);
+      font-weight: 500;
+      display: block;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      margin-bottom: 0.15rem;
+    }
+
+    .meta-val {
+      font-weight: 600;
+      color: white;
+    }
+
+    /* Utility margin clases */
+    .mt-4 { margin-top: 1rem; }
+    .mt-6 { margin-top: 1.5rem; }
+    .mb-4 { margin-bottom: 1rem; }
+    .mb-6 { margin-bottom: 1.5rem; }
+
+    .provider-settings {
+      animation: fadeIn 0.3s ease-out;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+    
+    <!-- Sidebar Navigation -->
+    <aside>
+      <div class="brand">
+        <div class="brand-icon">F</div>
+        <div>
+          <div class="brand-title">FormaTEC</div>
+          <div style="font-size: 0.65rem; color: var(--success); font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">Fundación ST</div>
+        </div>
+      </div>
+      
+      <ul class="nav-menu">
+        <li class="nav-item active" data-tab="dashboard">
+          <button>
+            <svg style="width:20px;height:20px" viewBox="0 0 24 24"><path fill="currentColor" d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" /></svg>
+            Biblioteca Semilla
+          </button>
+        </li>
+        <li class="nav-item" data-tab="playground">
+          <button>
+            <svg style="width:20px;height:20px" viewBox="0 0 24 24"><path fill="currentColor" d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M12,6A6,6 0 0,0 6,12A6,6 0 0,0 12,18A6,6 0 0,0 18,12A6,6 0 0,0 12,6M12,8A4,4 0 0,1 16,12A4,4 0 0,1 12,16A4,4 0 0,1 8,12A4,4 0 0,1 12,8Z" /></svg>
+            Compilador de Plantillas
+          </button>
+        </li>
+        <li class="nav-item" data-tab="converter">
+          <button>
+            <svg style="width:20px;height:20px" viewBox="0 0 24 24"><path fill="currentColor" d="M19,3H5C3.89,3 3,3.89 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5C21,3.89 20.1,3 19,3M19,19H5V5H19V19M16,11V9.5H13V8H16V6.5H11.5V11H14.5V12.5H11.5V14H16V12.5H13V11H16Z" /></svg>
+            Conversor YAML / JSON
+          </button>
+        </li>
+        <li class="nav-item" data-tab="exercises">
+          <button>
+            <svg style="width:20px;height:20px" viewBox="0 0 24 24"><path fill="currentColor" d="M12,3A9,9 0 0,0 3,12A9,9 0 0,0 12,21A9,9 0 0,0 21,12A9,9 0 0,0 12,3M12,5A7,7 0 0,1 19,12A7,7 0 0,1 12,19A7,7 0 0,1 5,12A7,7 0 0,1 12,5M12,7A5,5 0 0,0 7,12A5,5 0 0,0 12,17A5,5 0 0,0 17,12A5,5 0 0,0 12,7M12,9A3,3 0 0,1 15,12A3,3 0 0,1 12,15A3,3 0 0,1 9,12A3,3 0 0,1 12,9Z" /></svg>
+            Ejercicios Prácticos
+          </button>
+        </li>
+        <li class="nav-item" data-tab="metaprompt">
+          <button>
+            <svg style="width:20px;height:20px" viewBox="0 0 24 24"><path fill="currentColor" d="M8,12A4,4 0 1,1 12,8A4,4 0 0,1 8,12M8,6A6,6 0 1,0 14,12A6,6 0 0,0 8,6M20,12A4,4 0 1,1 24,8A4,4 0 0,1 20,12M20,6A6,6 0 1,0 26,12A6,6 0 0,0 20,6Z" /></svg>
+            Asistente Meta-Prompt
+          </button>
+        </li>
+        <li class="nav-item" data-tab="ai-evaluator">
+          <button>
+            <svg style="width:20px;height:20px" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2A10 10 0 0 0 2 12A10 10 0 0 0 12 22A10 10 0 0 0 22 12A10 10 0 0 0 12 2M12 4A8 8 0 0 1 20 12A8 8 0 0 1 12 20A8 8 0 0 1 4 12A8 8 0 0 1 12 4M12 6A6 6 0 0 0 6 12A6 6 0 0 0 12 18A6 6 0 0 0 18 12A6 6 0 0 0 12 6M12 8A4 4 0 0 1 16 12A4 4 0 0 1 12 16A4 4 0 0 1 8 12A4 4 0 0 1 12 8Z"/></svg>
+            Evaluador IA
+          </button>
+        </li>
+        <li class="nav-item" data-tab="faq">
+          <button>
+            <svg style="width:20px;height:20px" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 16h-2v-2h2v2zm1.07-7.75l-.9.92C12.45 11.9 12 12.5 12 14h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2-2 0-2.07.9-2.07 2H7c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.04-.42 1.99-1.07 2.75z"/></svg>
+            Asistente & FAQ
+          </button>
+        </li>
+      </ul>
+      
+      <div class="sidebar-footer">
+        <span class="prog-name">FormaTEC 2026</span>
+        <span class="inst-name">Fundación Santísima Trinidad</span>
+        <span style="font-size: 0.65rem; opacity: 0.8; margin-bottom: 0.25rem;">Gobierno de la Provincia de Mendoza</span>
+        <span style="font-size: 0.65rem; border-top: 1px solid rgba(255,255,255,0.08); margin-top: 0.5rem; padding-top: 0.5rem; display: block; opacity: 0.9;">
+          Licencia: <a href="LICENSE" target="_blank" style="color:var(--success); text-decoration:none; font-weight:600;">GNU GPL v3</a>
+          <br>Autor: Gabriel Sessa
+        </span>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main>
+      
+      <!-- HEADER COMPONENT -->
+      <header>
+        <div>
+          <h1 id="page-title">Biblioteca de Prompts Semilla</h1>
+          <p class="header-desc" id="page-desc">Explora el catálogo, la estructura taxonómica y los metadatos de los prompts optimizados.</p>
+        </div>
+        <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 0.5rem;">
+          <div class="institution-header">
+            <span>Programa <strong>FormaTEC</strong></span>
+            <span>Fundación <strong>Santísima Trinidad</strong></span>
+            <span>Gobierno de la Provincia de <strong>Mendoza</strong></span>
+          </div>
+          <span class="badge" id="db-status-badge" style="font-size:0.65rem;">Sincronizando...</span>
+        </div>
+      </header>
+
+      <!-- ACTIVE PROMPT LIFECYCLE BANNER -->
+      <div class="active-prompt-banner" id="active-prompt-banner" style="display: none;">
+        <div class="active-prompt-info">
+          <span class="badge badge-primary">Prompt Activo</span>
+          <div>
+            <strong id="active-prompt-name" style="color:white; font-size:1.05rem;">-</strong> 
+            <span id="active-prompt-version" style="font-size:0.85rem; color:var(--text-muted); font-weight:600;">v1.0.0</span>
+            <span id="active-prompt-tax" style="font-size:0.75rem; color:var(--primary); margin-left: 1rem; font-family:var(--font-mono);">-</span>
+            <span id="active-prompt-status" class="badge" style="margin-left: 0.5rem; font-size:0.7rem; display:none;">-</span>
+          </div>
+        </div>
+        <div class="active-prompt-actions">
+          <span>Enviar a:</span>
+          <button class="btn btn-secondary" style="font-size:0.8rem; padding:0.4rem 0.8rem;" onclick="sendActiveTo('playground')">Playground</button>
+          <button class="btn btn-secondary" style="font-size:0.8rem; padding:0.4rem 0.8rem;" onclick="sendActiveTo('converter')">Conversor</button>
+          <button class="btn btn-secondary" style="font-size:0.8rem; padding:0.4rem 0.8rem;" onclick="sendActiveTo('metaprompt')">Meta-Prompt</button>
+          <button class="btn btn-success" style="font-size:0.8rem; padding:0.4rem 0.8rem;" onclick="openEvolveModal()">Evolucionar</button>
+        </div>
+      </div>
+
+      <!-- PANEL 1: BIBLIOTECA SEMILLA -->
+      <section id="panel-dashboard" class="panel active">
+        
+        <!-- Glosario de Gestión de Librerías -->
+        <div class="card" style="background: rgba(99, 102, 241, 0.03);">
+          <div class="card-title" style="font-size: 1.1rem; color: var(--primary);">
+            <svg style="width:20px;height:20px" viewBox="0 0 24 24"><path fill="currentColor" d="M12,2C6.48,2 2,6.48 2,12C2,17.52 6.48,22 12,22C17.52,22 22,17.52 22,12C22,6.48 17.52,2 12,2M13,17H11V15H13V17M13,13H11V7H13V13Z" /></svg>
+            Conceptos Clave: Gestión y Organización de Librerías (Guadián, 2025)
+          </div>
+          <div class="concept-grid">
+            <div class="concept-card">
+              <span class="concept-tag">Organización</span>
+              <h5 class="concept-title">Taxonomía Multidimensional</h5>
+              <p class="concept-desc">Consiste en estructurar los prompts siguiendo rutas jerárquicas lógicas (ej: <code>área/objetivo/vertical</code>) combinadas con etiquetas cruzadas. Esto acelera las búsquedas y evita la existencia de duplicados en la base de datos.</p>
+            </div>
+            <div class="concept-card">
+              <span class="concept-tag">Automatización</span>
+              <h5 class="concept-title">El Doble Formato</h5>
+              <p class="concept-desc">Uso coordinado de Markdown con cabecera YAML Frontmatter (legible por humanos al editar) y JSON (legible por máquinas, orquestadores y APIs de software). Permite separar de forma clara los metadatos del prompt final.</p>
+            </div>
+            <div class="concept-card">
+              <span class="concept-tag">Calidad</span>
+              <h5 class="concept-title">Gobernanza y Roles</h5>
+              <p class="concept-desc">Define quién puede crear, editar o aprobar prompts. Los roles principales son: <strong>Curador</strong> (aprueba pases a producción), <strong>Editor</strong> (diseña borradores) y <strong>Lector</strong> (operadores que consumen las plantillas validadas).</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- LISTA DE PROMPTS Y CREACIÓN -->
+        <div class="card">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 1.25rem;">
+            <div class="card-title" style="margin-bottom:0;">
+              <svg style="width:24px;height:24px" viewBox="0 0 24 24"><path fill="currentColor" d="M4,6H2V20A2,2 0 0,0 4,22H18V20H4V6M20,2A2,2 0 0,1 22,4V16A2,2 0 0,1 20,18H8A2,2 0 0,1 6,16V4A2,2 0 0,1 8,2H20M20,16V4H8V16H20M11,7H17V9H11V7M11,11H17V13H11V11M11,15H15V17H11V15Z" /></svg>
+              Explorador de Taxonomía y Fichas de Prompts
+            </div>
+            <button class="btn" id="btn-toggle-create-prompt">Crear Nuevo Prompt</button>
+          </div>
+          
+          <!-- FORMULARIO OCULTO DE CREACIÓN -->
+          <div id="create-prompt-card" style="display:none; background:rgba(255,255,255,0.01); border:1px dashed var(--primary); padding: 1.5rem; border-radius:8px; margin-bottom:1.5rem; animation:fadeIn 0.3s ease-out;">
+            <h4 style="color:white; margin-bottom:1rem;">Nuevo Prompt del Catálogo (v1.0.0)</h4>
+            
+            <div class="grid-2">
+              <div>
+                <label for="new-p-name">Nombre descriptivo:</label>
+                <input type="text" id="new-p-name" placeholder="ej: Analizador de Contratos de Compraventa">
+                
+                <label for="new-p-id">ID único (usará llave primaria en base de datos):</label>
+                <input type="text" id="new-p-id" placeholder="ej: analizador_compraventa">
+                
+                <label for="new-p-tax">Ruta Taxonómica (Jerarquía):</label>
+                <input type="text" id="new-p-tax" placeholder="ej: legal/contratos">
+                
+                <label for="new-p-rag">¿Requiere RAG?</label>
+                <select id="new-p-rag">
+                  <option value="false">No (RAG = False)</option>
+                  <option value="true">Sí (RAG = True)</option>
+                </select>
+
+                <label for="new-p-status">Estado del Prompt:</label>
+                <select id="new-p-status">
+                  <option value="produccion">En Producción</option>
+                  <option value="revision">En Revisión</option>
+                  <option value="borrador">Borrador</option>
+                  <option value="deprecado">Deprecado</option>
+                </select>
+              </div>
+              <div>
+                <label for="new-p-models">Modelos recomendados (separados por comas):</label>
+                <input type="text" id="new-p-models" placeholder="Claude 3.5 Sonnet, GPT-4o">
+
+                <label for="new-p-vars">Variables placeholders (separadas por comas):</label>
+                <input type="text" id="new-p-vars" placeholder="contrato_texto, moneda, jurisdiccion">
+
+                <label for="new-p-tags">Etiquetas clave (separadas por comas):</label>
+                <input type="text" id="new-p-tags" placeholder="legal, contratos, compliance">
+
+                <label for="new-p-desc">Breve descripción del caso de uso:</label>
+                <input type="text" id="new-p-desc" placeholder="Análisis automatizado de riesgos financieros en contratos.">
+              </div>
+            </div>
+            
+            <label for="new-p-text">Instrucción y Plantilla del Prompt (escribe las variables entre llaves):</label>
+            <textarea id="new-p-text" class="code-editor" style="height:120px;" placeholder="Eres un abogado experto. Analiza el contrato {contrato_texto} en base a la legislación de {jurisdiccion}..."></textarea>
+            
+            <div style="display:flex; gap:1rem;">
+              <button class="btn btn-success" id="btn-save-new-prompt">Guardar en Repositorio</button>
+              <button class="btn btn-secondary" id="btn-cancel-new-prompt">Cancelar</button>
+            </div>
+          </div>
+
+          <p class="mb-4" style="color: var(--text-muted);">
+            Explora las recetas de prompts sembradas en el repositorio. Haz clic en cualquiera de las filas para inspeccionar sus metadatos estándar, activarlo en el ciclo de vida de desarrollo o eliminarlo del repositorio.
+          </p>
+          
+          <!-- BUSCADOR Y FILTROS POR TAGS -->
+          <div class="search-container" style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); padding: 1.25rem; border-radius: 8px; margin-bottom: 1.5rem;">
+            <div style="display: flex; gap: 0.75rem; margin-bottom: 0.75rem; flex-wrap: wrap;">
+              <input type="text" id="catalog-search-input" placeholder="🔍 Buscar por nombre, taxonomía, descripción, variables o etiquetas..." style="flex: 1; min-width: 250px; padding: 0.75rem 1rem; border-radius: 6px; border: 1px solid var(--border-color); background: rgba(0,0,0,0.2); color: white; outline: none; font-size: 0.9rem; margin-bottom: 0;" oninput="renderCatalog()">
+              <select id="catalog-status-filter" style="width: 180px; padding: 0.75rem 1rem; border-radius: 6px; border: 1px solid var(--border-color); background: rgba(0,0,0,0.2); color: white; outline: none; font-size: 0.9rem; margin-bottom: 0;" onchange="renderCatalog()">
+                <option value="">-- Todos los Estados --</option>
+                <option value="produccion">En Producción</option>
+                <option value="revision">En Revisión</option>
+                <option value="borrador">Borrador</option>
+                <option value="deprecado">Deprecado</option>
+              </select>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+              <span style="font-size: 0.85rem; color: var(--text-muted);">Filtrar por etiqueta:</span>
+              <div id="catalog-tag-filters" style="display: flex; flex-wrap: wrap; gap: 0.35rem;">
+                <!-- Las etiquetas se cargan dinámicamente -->
+              </div>
+            </div>
+          </div>
+          
+          <div class="prompt-list" id="seed-prompts-list">
+            <!-- Dynamic elements load here -->
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Flujo de Compilación Automatizada en el Entorno</div>
+          <div class="grid-2">
+            <div>
+              <h4 style="color: white; margin-bottom: 0.5rem;">Paso 1: Edición Humana (Markdown + YAML)</h4>
+              <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">
+                Los ingenieros de prompts y editores trabajan en la carpeta <code>libreria/</code> modificando archivos con extensión <code>.md</code>. Su cabecera YAML Frontmatter auto-documenta la versión, el modelo compatible y las variables.
+              </p>
+              <h4 style="color: white; margin-bottom: 0.5rem;">Paso 2: Ejecución del Compilador Python</h4>
+              <p style="color: var(--text-muted); font-size: 0.9rem;">
+                Se ejecuta el script de automatización para generar un JSON hermano listo para APIs de software:
+              </p>
+              <pre style="background: rgba(0,0,0,0.3); padding: 0.75rem; border-radius: 6px; font-family: var(--font-mono); font-size: 0.8rem; border: 1px solid var(--border-color); color: var(--success); margin-top: 0.5rem;">python scripts/compile_prompts.py</pre>
+            </div>
+            <div>
+              <h4 style="color: white; margin-bottom: 0.5rem;">Métricas de Éxito del Catálogo</h4>
+              <ul style="color: var(--text-muted); font-size: 0.9rem; padding-left: 1.25rem;">
+                <li style="margin-bottom: 0.5rem;"><strong style="color: white;">Adopción (&ge; 60%):</strong> Porcentaje de equipos activos que usan el catálogo para evitar prompts ad-hoc improvisados.</li>
+                <li style="margin-bottom: 0.5rem;"><strong style="color: white;">Mantenibilidad (&ge; 70%):</strong> Proporción de prompts actualizados o re-testeados en los últimos 90 días ante actualizaciones de modelos.</li>
+                <li><strong style="color: white;">Reutilización (&ge; 30%):</strong> Prompts con 3 o más usos recurrentes por mes dentro del flujo de trabajo de la empresa.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PANEL 2: COMPILADOR DE PLANTILLAS -->
+      <section id="panel-playground" class="panel">
+        
+        <!-- Glosario de Playground -->
+        <div class="card" style="background: rgba(99, 102, 241, 0.03);">
+          <div class="card-title" style="font-size: 1.1rem; color: var(--primary);">
+            <svg style="width:20px;height:20px" viewBox="0 0 24 24"><path fill="currentColor" d="M12,2C6.48,2 2,6.48 2,12C2,17.52 6.48,22 12,22C17.52,22 22,17.52 22,12C22,6.48 17.52,2 12,2M13,17H11V15H13V17M13,13H11V7H13V13Z" /></svg>
+            Conceptos Clave: Plantillas y Placeholders
+          </div>
+          <div class="concept-grid">
+            <div class="concept-card">
+              <span class="concept-tag">Estructura</span>
+              <h5 class="concept-title">Plantillas de Prompts</h5>
+              <p class="concept-desc">Son instrucciones de IA semiestructuradas que aíslan la lógica operativa de los datos reales, permitiendo que la misma instrucción se aplique repetidamente a distintas entradas.</p>
+            </div>
+            <div class="concept-card">
+              <span class="concept-tag">Sintaxis</span>
+              <h5 class="concept-title">Placeholders o Marcadores</h5>
+              <p class="concept-desc">Etiquetas temporales encerradas entre llaves <code>{VARIABLE}</code> que se inyectan en el prompt. Al ser compilados, se reemplazan dinámicamente por los valores ingresados por el usuario final.</p>
+            </div>
+            <div class="concept-card">
+              <span class="concept-tag">Riesgo</span>
+              <h5 class="concept-title">Falta de Normalización</h5>
+              <p class="concept-desc">Ocurre cuando las variables no se documentan. Si el operador no sabe qué formato o tipo de valor espera cada placeholder (ej. un texto largo vs un código de ID), la salida del modelo de lenguaje fallará.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Simulador Dinámico de Placeholders</div>
+          <p class="mb-4" style="color: var(--text-muted);">
+            Selecciona un prompt de la biblioteca o pega tu propia plantilla. Los placeholders como <code>{VARIABLE}</code> se detectarán y generarán entradas de formulario dinámicas automáticamente.
+          </p>
+
+          <div class="mb-6">
+            <label for="playground-select-prompt">Cargar plantilla desde catálogo:</label>
+            <select id="playground-select-prompt">
+              <option value="">-- Pega tu propio prompt o selecciona uno aquí --</option>
+              <!-- Dinámico -->
+            </select>
+          </div>
+
+          <div class="split-layout">
+            <div class="editor-section">
+              <label for="playground-template">Estructura / Plantilla de Prompt:</label>
+              <textarea id="playground-template" class="code-editor" style="height: 100%; resize: none;" placeholder="Escribe tu plantilla aquí usando marcadores de posición entre llaves, por ejemplo:
+Eres un especialista en {area}. Escribe un informe sobre {tema} en un tono {tono}..."></textarea>
+            </div>
+            
+            <div class="preview-section">
+              <label>Formulario de Variables y Preview Compilado:</label>
+              <div class="editor-wrapper">
+                <div class="variables-container" id="playground-variables-form">
+                  <div style="color: var(--text-muted); font-style: italic; font-size: 0.9rem; text-align: center;">
+                    No se han detectado variables. Escribe placeholders como {VARIABLE} en el editor de la izquierda.
+                  </div>
+                </div>
+                
+                <div style="font-size: 0.9rem; font-weight: 500; margin-bottom: 0.5rem; color: white;">Resultado Final:</div>
+                <div class="preview-wrapper">
+                  <div class="preview-box" id="playground-compiled-preview">Aquí aparecerá tu prompt compilado listo para enviar al LLM...</div>
+                  <div class="preview-actions">
+                    <button class="copy-btn" id="copy-compiled-btn" title="Copiar al portapapeles">
+                      <svg style="width:18px;height:18px" viewBox="0 0 24 24"><path fill="currentColor" d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z" /></svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PANEL 3: CONVERSOR YAML / JSON -->
+      <section id="panel-converter" class="panel">
+        
+        <!-- Glosario de Conversor -->
+        <div class="card" style="background: rgba(99, 102, 241, 0.03);">
+          <div class="card-title" style="font-size: 1.1rem; color: var(--primary);">
+            <svg style="width:20px;height:20px" viewBox="0 0 24 24"><path fill="currentColor" d="M12,2C6.48,2 2,6.48 2,12C2,17.52 6.48,22 12,22C17.52,22 22,17.52 22,12C22,6.48 17.52,2 12,2M13,17H11V15H13V17M13,13H11V7H13V13Z" /></svg>
+            Conceptos Clave: Doble Formato e Integración
+          </div>
+          <div class="concept-grid">
+            <div class="concept-card">
+              <span class="concept-tag">Sintaxis</span>
+              <h5 class="concept-title">YAML Frontmatter</h5>
+              <p class="concept-desc">Bloque de texto delimitado por <code>---</code> al inicio de un archivo Markdown. Su estructura clave-valor permite definir metadatos complejos de forma limpia e intuitiva para los seres humanos.</p>
+            </div>
+            <div class="concept-card">
+              <span class="concept-tag">Consumo</span>
+              <h5 class="concept-title">JSON Automatizado</h5>
+              <p class="concept-desc">Formato ligero de intercambio de datos. Convierte la estructura YAML y el texto del prompt en claves anidadas que los programas de software o flujos de API consumen de manera robusta.</p>
+            </div>
+            <div class="concept-card">
+              <span class="concept-tag">Beneficio</span>
+              <h5 class="concept-title">Independencia de Código</h5>
+              <p class="concept-desc">Permite que un diseñador de prompts actualice la lógica y las variables en un archivo Markdown sin necesidad de reescribir o recompilar el código de software de la aplicación que los invoca.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Conversor Instantáneo de Formato de Prompts</div>
+          <p class="mb-4" style="color: var(--text-muted);">
+            Esta herramienta simula la conversión lógica que realiza el script de compilación en Python. Pega a la izquierda un prompt en formato Markdown con cabecera YAML Frontmatter y observa cómo se compila a JSON estructurado para el software en tiempo real.
+          </p>
+
+          <div class="mb-4" style="max-width: 500px;">
+            <label for="converter-select-prompt">Cargar prompt del catálogo:</label>
+            <select id="converter-select-prompt">
+              <option value="">-- Pega un prompt o selecciona uno de la base de datos aquí --</option>
+              <!-- Dinámico -->
+            </select>
+          </div>
+
+          <div class="split-layout">
+            <div class="editor-section">
+              <label for="converter-input">Entrada: Markdown + YAML Frontmatter</label>
+              <textarea id="converter-input" class="code-editor" style="height: 100%; resize: none;" placeholder="---
+name: Nombre descriptivo
+version: 1.0.0
+description: Análisis de sentimiento
+compatible_models:
+  - gpt-4o
+variables:
+  - texto
+rag_context: false
+tags:
+  - analytics
+---
+Analiza el sentimiento de: {texto}"></textarea>
+              <div class="mt-4">
+                <button class="btn" id="btn-run-convert">Compilar a JSON</button>
+                <button class="btn btn-secondary" id="btn-load-converter-sample">Cargar Ejemplo</button>
+              </div>
+            </div>
+            
+            <div class="preview-section">
+              <label for="converter-output">Salida: JSON Compilado (Legible por Máquinas)</label>
+              <div class="preview-wrapper">
+                <textarea id="converter-output" class="code-editor" style="height: 100%; resize: none; background-color: rgba(0,0,0,0.2); border: 1px solid var(--border-color); color: #34D399;" readonly placeholder="El JSON compilado aparecerá aquí..."></textarea>
+                <div class="preview-actions">
+                  <button class="copy-btn" id="copy-json-btn" title="Copiar al portapapeles">
+                    <svg style="width:18px;height:18px" viewBox="0 0 24 24"><path fill="currentColor" d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z" /></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PANEL 4: EJERCICIOS PRÁCTICOS -->
+      <section id="panel-exercises" class="panel">
+        
+        <!-- Glosario de Gobernanza y Métricas -->
+        <div class="card" style="background: rgba(99, 102, 241, 0.03);">
+          <div class="card-title" style="font-size: 1.1rem; color: var(--primary);">
+            <svg style="width:20px;height:20px" viewBox="0 0 24 24"><path fill="currentColor" d="M12,2C6.48,2 2,6.48 2,12C2,17.52 6.48,22 12,22C17.52,22 22,17.52 22,12C22,6.48 17.52,2 12,2M13,17H11V15H13V17M13,13H11V7H13V13Z" /></svg>
+            Conceptos Clave: Gobernanza, Versionado Semántico y Mitigaciones
+          </div>
+          <div class="concept-grid">
+            <div class="concept-card">
+              <span class="concept-tag">Gobernanza</span>
+              <h5 class="concept-title">Versionado Semántico (SemVer)</h5>
+              <p class="concept-desc">Normas para incrementar números de versión de un prompt: <code>Mayor.Menor.Parche</code>. Correcciones tipográficas incrementan el parche; agregar variables opcionales incrementa la menor; reescrituras de lógica incrementan la mayor.</p>
+            </div>
+            <div class="concept-card">
+              <span class="concept-tag">Mitigación</span>
+              <h5 class="concept-title">Inconsistencia entre Modelos</h5>
+              <p class="concept-desc">Un prompt optimizado para GPT-4 puede fallar o volverse redundante en Claude o Llama. La mitigación requiere etiquetar la compatibilidad en los metadatos y re-testear la instrucción en cada actualización.</p>
+            </div>
+            <div class="concept-card">
+              <span class="concept-tag">Mitigación</span>
+              <h5 class="concept-title">Baja Adopción del Catálogo</h5>
+              <p class="concept-desc">Riesgo de que los usuarios vuelvan a prompts locales ad-hoc. Se mitiga implementando flujos sencillos (ej: Notion o este dashboard), formación interactiva y mostrando ejemplos claros de entrada/salida.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Evaluador de Ejercicios Prácticos del Repositorio</div>
+          <p class="mb-6" style="color: var(--text-muted);">
+            Utiliza este panel para responder interactiva y estructuradamente los ejercicios del taller y validar tus respuestas inmediatamente con pruebas automatizadas integradas.
+          </p>
+
+          <div class="exercise-tabs">
+            <button class="ex-tab active" data-ex="1">Ejercicio 1: Taxonomía</button>
+            <button class="ex-tab" data-ex="2">Ejercicio 2: Formatos</button>
+            <button class="ex-tab" data-ex="3">Ejercicio 3: Variables</button>
+            <button class="ex-tab" data-ex="4">Ejercicio 4: Meta-Prompting</button>
+            <button class="ex-tab" data-ex="5">Ejercicio 5: Gobernanza</button>
+          </div>
+
+          <!-- EJERCICIO 1 -->
+          <div class="exercise-details active" id="ex-details-1">
+            <div style="background-color: rgba(99, 102, 241, 0.05); padding: 1.25rem; border-radius: 8px; border-left: 4px solid var(--primary); margin-bottom: 1.5rem;">
+              <h4 style="color: white; margin-bottom: 0.25rem;">Objetivo de Taxonomía y Metadatos</h4>
+              <p style="font-size: 0.9rem; color: var(--text-muted);">
+                Estructura la clasificación del <strong>Prompt B (NDA de confidencialidad)</strong> definiendo su taxonomía <code>área/vertical</code> y asignando sus variables.
+              </p>
+            </div>
+            
+            <div class="grid-2">
+              <div>
+                <label for="ex1-tax">1. Ruta Taxonómica Sugerida (ej. legal/contratos):</label>
+                <input type="text" id="ex1-tax" placeholder="legal/..." value="">
+                
+                <label for="ex1-name">2. Nombre del Prompt:</label>
+                <input type="text" id="ex1-name" placeholder="Analizador de NDA corporativos" value="">
+
+                <label for="ex1-models">3. Modelos Compatibles (ej. Claude 3.5 Sonnet, GPT-4o):</label>
+                <input type="text" id="ex1-models" placeholder="gpt-4o, claude-3.5-sonnet" value="">
+              </div>
+              <div>
+                <label for="ex1-vars">4. Variables identificadas en el Prompt B (Separadas por comas):</label>
+                <input type="text" id="ex1-vars" placeholder="documento_nda, duracion, penalizaciones" value="">
+
+                <label for="ex1-rag">5. ¿Requiere RAG (Contexto Externo)?</label>
+                <select id="ex1-rag">
+                  <option value="">-- Selecciona --</option>
+                  <option value="true">Sí (RAG True)</option>
+                  <option value="false">No (RAG False)</option>
+                </select>
+
+                <label for="ex1-tags">6. Etiquetas asignadas (Separadas por comas):</label>
+                <input type="text" id="ex1-tags" placeholder="legal, contratos, nda, compliance" value="">
+              </div>
+            </div>
+
+            <button class="btn btn-success mt-4" onclick="validateExercise1()">Validar Solución</button>
+            <div class="validation-box" id="val-box-1"></div>
+          </div>
+
+          <!-- EJERCICIO 2 -->
+          <div class="exercise-details" id="ex-details-2">
+            <div style="background-color: rgba(99, 102, 241, 0.05); padding: 1.25rem; border-radius: 8px; border-left: 4px solid var(--primary); margin-bottom: 1.5rem;">
+              <h4 style="color: white; margin-bottom: 0.25rem;">Objetivo de Formatos</h4>
+              <p style="font-size: 0.9rem; color: var(--text-muted);">
+                Escribe la representación <strong>JSON</strong> completa y válida del prompt de Análisis de Sentimiento de Correos descrito en el ejercicio 2 del repositorio.
+              </p>
+            </div>
+
+            <label for="ex2-json">Pega tu código JSON aquí:</label>
+            <textarea id="ex2-json" class="code-editor" style="height: 250px; resize: vertical;" placeholder='{
+  "name": "Análisis de Sentimiento de Correos B2B",
+  "version": "1.0.0",
+  "description": "...",
+  "compatible_models": ["gpt-4o", "claude-3-5-sonnet"],
+  "variables": ["correo_cliente", "puntos_frustracion"],
+  "rag_context": false,
+  "tags": ["soporte", "sentiment"],
+  "prompt_text": "..."
+}'></textarea>
+
+            <button class="btn btn-success mt-4" onclick="validateExercise2()">Validar Solución</button>
+            <div class="validation-box" id="val-box-2"></div>
+          </div>
+
+          <!-- EJERCICIO 3 -->
+          <div class="exercise-details" id="ex-details-3">
+            <div style="background-color: rgba(99, 102, 241, 0.05); padding: 1.25rem; border-radius: 8px; border-left: 4px solid var(--primary); margin-bottom: 1.5rem;">
+              <h4 style="color: white; margin-bottom: 0.25rem;">Objetivo de Variables y Placeholders</h4>
+              <p style="font-size: 0.9rem; color: var(--text-muted);">
+                Transforma el prompt estático del ejercicio 3 (análisis de balances financieros) en una plantilla con placeholders en mayúsculas (ej. <code>{EMPRESA}</code>) y documenta sus parámetros.
+              </p>
+            </div>
+
+            <label for="ex3-prompt">1. Plantilla de Prompt Parametrizada (con placeholders como {EMPRESA}, {PERIODO}, etc.):</label>
+            <textarea id="ex3-prompt" class="code-editor" style="height: 120px; resize: none;" placeholder="Quiero que analices el balance general de {EMPRESA} correspondiente al {PERIODO}..."></textarea>
+
+            <label for="ex3-doc">2. Documentación de Variables (Especifica el nombre y tipo de al menos 2 variables en mayúsculas):</label>
+            <textarea id="ex3-doc" class="code-editor" style="height: 100px; resize: none;" placeholder="EMPRESA: Cadena de texto (Nombre de la empresa)
+PERIODO: Cadena de texto (Trimestre y año)"></textarea>
+
+            <button class="btn btn-success mt-4" onclick="validateExercise3()">Validar Solución</button>
+            <div class="validation-box" id="val-box-3"></div>
+          </div>
+
+          <!-- EJERCICIO 4 -->
+          <div class="exercise-details" id="ex-details-4">
+            <div style="background-color: rgba(99, 102, 241, 0.05); padding: 1.25rem; border-radius: 8px; border-left: 4px solid var(--primary); margin-bottom: 1.5rem;">
+              <h4 style="color: white; margin-bottom: 0.25rem;">Objetivo de Meta-Prompting</h4>
+              <p style="font-size: 0.9rem; color: var(--text-muted);">
+                Diseña el prompt del <strong>Orquestador (Director y Expertos)</strong> detallado en el ejercicio 4 del taller para analizar manipulación o información privilegiada.
+              </p>
+            </div>
+
+            <label for="ex4-orchestrator">Escribe tu Prompt Orquestador (debe definir los roles de experto, proceso y consolidación):</label>
+            <textarea id="ex4-orchestrator" class="code-editor" style="height: 200px; resize: vertical;" placeholder="Actúa como un Director de Orquesta de IA. Tu tarea es analizar... Asigna subtareas a 3 expertos virtuales:
+1. Analista Financiero Senior...
+2. Abogado Especialista en Regulación de Valores...
+3. Experto en Análisis Forense...
+El proceso debe finalizar con un debate e informe consolidado..."></textarea>
+
+            <button class="btn btn-success mt-4" onclick="validateExercise4()">Validar Solución</button>
+            <div class="validation-box" id="val-box-4"></div>
+          </div>
+
+          <!-- EJERCICIO 5 -->
+          <div class="exercise-details" id="ex-details-5">
+            <div style="background-color: rgba(99, 102, 241, 0.05); padding: 1.25rem; border-radius: 8px; border-left: 4px solid var(--primary); margin-bottom: 1.5rem;">
+              <h4 style="color: white; margin-bottom: 0.25rem;">Objetivo de Gobernanza e Iteración</h4>
+              <p style="font-size: 0.9rem; color: var(--text-muted);">
+                Actualiza el número de versión semántica para la plantilla financiera. Recuerda: se agregó una nueva variable obligatoria (<code>{TIPO_DE_CAMBIO}</code>) e incompatibilidades con GPT-4.
+              </p>
+            </div>
+
+            <div class="grid-2">
+              <div>
+                <label for="ex5-version">Nueva Versión Semántica Sugerida:</label>
+                <input type="text" id="ex5-version" placeholder="Por ejemplo: 1.1.0 o 2.0.0" value="">
+              </div>
+              <div>
+                <label for="ex5-changelog">Entrada de Changelog de Cambios:</label>
+                <input type="text" id="ex5-changelog" placeholder="ej. Agregada la variable {TIPO_DE_CAMBIO} y ajustada compatibilidad" value="">
+              </div>
+            </div>
+
+            <button class="btn btn-success mt-4" onclick="validateExercise5()">Validar Solución</button>
+            <div class="validation-box" id="val-box-5"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PANEL 5: METAPROMPT BUILDER -->
+      <section id="panel-metaprompt" class="panel">
+        
+        <!-- Glosario de Meta-prompting -->
+        <div class="card" style="background: rgba(99, 102, 241, 0.03);">
+          <div class="card-title" style="font-size: 1.1rem; color: var(--primary);">
+            <svg style="width:20px;height:20px" viewBox="0 0 24 24"><path fill="currentColor" d="M12,2C6.48,2 2,6.48 2,12C2,17.52 6.48,22 12,22C17.52,22 22,17.52 22,12C22,6.48 17.52,2 12,2M13,17H11V15H13V17M13,13H11V7H13V13Z" /></svg>
+            Conceptos Clave: Técnicas Avanzadas de Meta-Prompting
+          </div>
+          <div class="concept-grid">
+            <div class="concept-card">
+              <span class="concept-tag">Etapa 1</span>
+              <h5 class="concept-title">Auto-meta Prompting</h5>
+              <p class="concept-desc">Instrucción diseñada para que un LLM actúe como un "Ingeniero de Prompts" autónomo. Analiza una tarea compleja y diseña la estructura del prompt de sistema óptimo (rol, reglas, formato de salida y variables).</p>
+            </div>
+            <div class="concept-card">
+              <span class="concept-tag">Etapa 2</span>
+              <h5 class="concept-title">Orquestación de Expertos</h5>
+              <p class="concept-desc">Técnica consistente en estructurar una simulación donde un "Director" descompone un problema y coordina las opiniones de múltiples "Expertos Virtuales" de nicho antes de consolidar la respuesta.</p>
+            </div>
+            <div class="concept-card">
+              <span class="concept-tag">Etapa 3</span>
+              <h5 class="concept-title">Refinamiento Iterativo</h5>
+              <p class="concept-desc">Bucle de optimización donde el modelo de lenguaje actúa como evaluador de su propio prompt mediante rúbricas objetivas, reescribiendo la instrucción hasta alcanzar una calificación de claridad 10/10.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Generador de Estructuras de Meta-Prompting</div>
+          <p class="mb-6" style="color: var(--text-muted);">
+            Esta herramienta interactiva te ayuda a escribir meta-prompts estructurados basados en principios de ingeniería avanzada. Completa los campos a continuación para armar tu plantilla.
+          </p>
+
+          <div class="grid-2">
+            <div>
+              <label for="meta-task">1. Definir la Tarea Final deseada:</label>
+              <input type="text" id="meta-task" placeholder="ej. Redacción de reportes de auditoría de seguridad informática" value="Clasificación y respuesta automática a quejas de clientes por cobros duplicados">
+              
+              <label for="meta-expert">2. Rol de Experto del Prompt Generador:</label>
+              <input type="text" id="meta-expert" placeholder="ej. Ingeniero de Seguridad Cloud y Redactor Técnico" value="Especialista en Experiencia del Cliente B2B y Auditor de Facturación">
+
+              <label for="meta-inputs">3. Variables clave de entrada del prompt final (separadas por comas):</label>
+              <input type="text" id="meta-inputs" placeholder="ej. reporte_crudo, severidad" value="datos_cliente, monto_duplicado, factura_original">
+
+              <label for="meta-output">4. Estructura de Salida Requerida:</label>
+              <select id="meta-output">
+                <option value="una tabla Markdown detallando cada paso de mitigación.">Tabla de Markdown</option>
+                <option value="un objeto JSON estructurado con las claves claves: clasificacion, tono_cliente, propuesta_resolucion y mensaje_correo.">Formato JSON Estructurado</option>
+                <option value="una lista numerada estructurada en Análisis, Plan de Acción y Mensaje Final.">Lista Numerada Estructurada</option>
+              </select>
+            </div>
+            
+            <div class="preview-section">
+              <label>Meta-Prompt Generated (Auto-meta Prompting):</label>
+              <div class="preview-wrapper" style="height: calc(100% - 30px);">
+                <div class="preview-box" id="meta-prompt-result" style="height: 100%;">El Meta-Prompt se construirá a medida que escribas...</div>
+                <div class="preview-actions">
+                  <button class="copy-btn" id="copy-meta-btn" title="Copiar al portapapeles">
+                    <svg style="width:18px;height:18px" viewBox="0 0 24 24"><path fill="currentColor" d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z" /></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PANEL 6: EVALUADOR IA -->
+      <section id="panel-ai-evaluator" class="panel">
+        <!-- Glosario de Evaluación por IA -->
+        <div class="card" style="background: rgba(99, 102, 241, 0.03);">
+          <div class="card-title" style="font-size: 1.1rem; color: var(--primary);">
+            <svg style="width:20px;height:20px" viewBox="0 0 24 24"><path fill="currentColor" d="M12,2C6.48,2 2,6.48 2,12C2,17.52 6.48,22 12,22C17.52,22 22,17.52 22,12C22,6.48 17.52,2 12,2M13,17H11V15H13V17M13,13H11V7H13V13Z" /></svg>
+            Conceptos Clave: Evaluación de Prompts por IA (Mejores Prácticas)
+          </div>
+          <div class="concept-grid">
+            <div class="concept-card">
+              <span class="concept-tag">Automatización</span>
+              <h5 class="concept-title">Auditoría de Calidad</h5>
+              <p class="concept-desc">Permite analizar de forma automatizada las directivas del prompt frente a una rúbrica estructurada de buenas prácticas, detectando ambigüedades, placeholders no normalizados o instrucciones propensas a alucinación.</p>
+            </div>
+            <div class="concept-card">
+              <span class="concept-tag">Diseño</span>
+              <h5 class="concept-title">Refinamiento Iterativo</h5>
+              <p class="concept-desc">Proceso por el cual la IA evalúa la instrucción del usuario y propone una versión reestructurada que utiliza técnicas avanzadas como delimitadores XML, roles explícitos y few-shot para guiar mejor al modelo.</p>
+            </div>
+            <div class="concept-card">
+              <span class="concept-tag">Integración</span>
+              <h5 class="concept-title">Ciclo de Vida de Prompts</h5>
+              <p class="concept-desc">Una vez que la IA propone un prompt optimizado, este puede enviarse directamente al playground para compilar variables o guardarse en la base de datos local SQLite bajo una nueva versión SemVer.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- CONFIGURACIÓN API -->
+        <div class="grid-2">
+          <!-- Columna Configuración -->
+          <div class="card">
+            <div class="card-title">
+              <svg style="width:24px;height:24px" viewBox="0 0 24 24"><path fill="currentColor" d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.47,5.34 14.86,5.08L14.47,2.42C14.43,2.18 14.22,2 13.97,2H9.97C9.72,2 9.51,2.18 9.47,2.42L9.08,5.08C8.47,5.34 7.9,5.66 7.38,6.05L4.89,5.05C4.67,4.96 4.4,5.05 4.27,5.27L2.27,8.73C2.15,8.95 2.2,9.22 2.39,9.37L4.5,11C4.46,11.34 4.43,11.67 4.43,12C4.43,12.33 4.46,12.65 4.5,12.97L2.39,14.63C2.2,14.78 2.15,15.05 2.27,15.27L4.27,18.73C4.4,18.95 4.67,19.04 4.89,18.95L7.38,17.95C7.9,18.34 8.47,18.66 9.08,18.92L9.47,21.58C9.51,21.82 9.72,22 9.97,22H13.97C14.22,22 14.43,21.82 14.47,21.58L14.86,18.92C15.47,18.66 16.04,18.34 16.56,17.95L19.05,18.95C19.27,19.04 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z" /></svg>
+              Configuración de API
+            </div>
+            
+            <label for="ai-provider">Proveedor de IA:</label>
+            <select id="ai-provider" onchange="toggleAiProviderSettings()">
+              <option value="gemini" selected>Google Gemini</option>
+              <option value="openai">OpenAI</option>
+              <option value="ollama">Ollama (Local)</option>
+            </select>
+
+            <!-- Gemini Settings -->
+            <div id="settings-gemini" class="provider-settings">
+              <label for="gemini-key">API Key de Gemini:</label>
+              <div style="display:flex; gap:0.5rem; margin-bottom: 1.25rem;">
+                <input type="password" id="gemini-key" placeholder="AIzaSy..." style="margin-bottom:0;">
+                <button class="btn btn-secondary" onclick="toggleKeyVisibility('gemini-key')" style="padding:0 1rem; margin-bottom:0; display:flex; align-items:center;">👁️</button>
+              </div>
+              
+              <label for="gemini-model">Modelo:</label>
+              <select id="gemini-model">
+                <option value="gemini-1.5-flash" selected>gemini-1.5-flash (Rápido)</option>
+                <option value="gemini-2.5-flash">gemini-2.5-flash</option>
+                <option value="gemini-1.5-pro">gemini-1.5-pro (Avanzado)</option>
+              </select>
+            </div>
+
+            <!-- OpenAI Settings -->
+            <div id="settings-openai" class="provider-settings" style="display:none;">
+              <label for="openai-key">API Key de OpenAI:</label>
+              <div style="display:flex; gap:0.5rem; margin-bottom: 1.25rem;">
+                <input type="password" id="openai-key" placeholder="sk-proj-..." style="margin-bottom:0;">
+                <button class="btn btn-secondary" onclick="toggleKeyVisibility('openai-key')" style="padding:0 1rem; margin-bottom:0; display:flex; align-items:center;">👁️</button>
+              </div>
+              
+              <label for="openai-model">Modelo:</label>
+              <select id="openai-model">
+                <option value="gpt-4o-mini" selected>gpt-4o-mini (Recomendado)</option>
+                <option value="gpt-4o">gpt-4o</option>
+              </select>
+            </div>
+
+            <!-- Ollama Settings -->
+            <div id="settings-ollama" class="provider-settings" style="display:none;">
+              <label for="ollama-url">Base URL de Ollama:</label>
+              <input type="text" id="ollama-url" value="http://localhost:11434" placeholder="http://localhost:11434">
+              
+              <label for="ollama-model">Nombre del Modelo:</label>
+              <div style="display:flex; gap:0.5rem; margin-bottom:1.25rem;">
+                <select id="ollama-model" style="margin-bottom:0; flex:1;">
+                  <option value="llama3" selected>llama3</option>
+                  <option value="llama3:latest">llama3:latest</option>
+                  <option value="mistral">mistral</option>
+                  <option value="gemma">gemma</option>
+                </select>
+                <button type="button" class="btn btn-secondary" onclick="fetchOllamaModels()" style="margin-bottom:0; font-size:0.85rem; padding:0 1rem; display:flex; align-items:center; gap:0.35rem;" title="Cargar modelos locales desde Ollama">
+                  🔄 Cargar
+                </button>
+              </div>
+              
+              <div style="background-color:rgba(239, 68, 68, 0.05); border-left: 3px solid var(--error); padding:0.75rem; font-size:0.8rem; border-radius:4px; margin-bottom:1.25rem; color:var(--text-muted); line-height: 1.4;">
+                <strong style="color:white; display:block; margin-bottom:0.15rem;">CORS en Ollama Local:</strong>
+                Para conectar Ollama con esta web, debes iniciarlo permitiendo orígenes externos. En Windows, ejecuta:
+                <code style="display:block; background:rgba(0,0,0,0.3); padding:0.25rem; margin-top:0.25rem; font-family:var(--font-mono); color:#10B981; overflow-x: auto;">cmd /c "set OLLAMA_ORIGINS=* && ollama serve"</code>
+              </div>
+            </div>
+
+            <button class="btn btn-success" onclick="saveAiConfig()">Guardar Configuración</button>
+          </div>
+
+          <!-- Columna System Prompt -->
+          <div class="card" style="display:flex; flex-direction:column;">
+            <div class="card-title">
+              <svg style="width:24px;height:24px" viewBox="0 0 24 24"><path fill="currentColor" d="M12,3c-4.97,0-9,4.03-9,9c0,2.12,0.74,4.07,1.97,5.61L4.35,19.4c-0.39,0.39-0.39,1.02,0,1.41c0.39,0.39,1.02,0.39,1.41,0l1.9-1.9C9.09,19.59,10.51,20,12,20c4.97,0,9-4.03,9-9S16.97,3,12,3z M12,18c-3.31,0-6-2.69-6-6s2.69-6,6-6s6,2.69,6,6S15.31,18,12,18z" /></svg>
+              Prompt del Analizador Experto
+            </div>
+            <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:1rem;">
+              Define las directivas y criterios de auditoría de la IA. El prompt predefinido aplica las mejores prácticas aprendidas en clase.
+            </p>
+            
+            <textarea id="ai-system-prompt" class="code-editor" style="flex: 1; min-height:220px; resize:vertical; margin-bottom: 1rem;"></textarea>
+            
+            <div style="display:flex; justify-content:flex-end;">
+              <button class="btn btn-secondary" onclick="resetAiSystemPrompt()" style="font-size:0.85rem; padding:0.5rem 1rem;">Restablecer Predeterminado</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- INTERFAZ DE TRABAJO -->
+        <div class="card">
+          <div class="card-title">Auditoría y Optimización de Prompt</div>
+          <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:1.5rem;">
+            Selecciona un prompt de tu catálogo o escribe tu propia instrucción a continuación. Al presionar "Evaluar", la IA lo analizará críticamente y propondrá mejoras.
+          </p>
+
+          <div class="mb-4">
+            <label for="ai-select-prompt">Cargar prompt del catálogo:</label>
+            <select id="ai-select-prompt" onchange="loadPromptIntoAiEvaluator()">
+              <option value="">-- Escribe un prompt libre o selecciona uno aquí --</option>
+              <!-- Dinámico -->
+            </select>
+          </div>
+
+          <div class="grid-2">
+            <div>
+              <label for="ai-prompt-input">Instrucción del Prompt a Evaluar:</label>
+              <textarea id="ai-prompt-input" class="code-editor" style="height:250px; resize:vertical;" placeholder="Escribe tu prompt aquí..."></textarea>
+              
+              <div style="margin-top: 1rem; display:flex; gap:1rem; align-items:center;">
+                <button class="btn" id="btn-ai-evaluate" onclick="runAiEvaluation()">
+                  <svg style="width:20px;height:20px" viewBox="0 0 24 24"><path fill="currentColor" d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M12,6A6,6 0 0,0 6,12A6,6 0 0,0 12,18A6,6 0 0,0 18,12A6,6 0 0,0 12,6M12,8A4,4 0 0,1 16,12A4,4 0 0,1 12,16A4,4 0 0,1 8,12A4,4 0 0,1 12,8Z" /></svg>
+                  Evaluar con IA
+                </button>
+                <span id="ai-evaluation-status" style="font-size:0.9rem; color:var(--text-muted); font-weight:500;"></span>
+              </div>
+            </div>
+
+            <div style="display:flex; flex-direction:column;">
+              <label>Resultados de la Evaluación de la IA:</label>
+              <div style="flex:1; display:flex; flex-direction:column; background:rgba(0,0,0,0.2); border:1px solid var(--border-color); border-radius:8px; padding:1.25rem; min-height:250px;">
+                <!-- Pestañas de Resultados -->
+                <div style="display:flex; gap:0.5rem; border-bottom:1px solid var(--border-color); padding-bottom:0.5rem; margin-bottom:1rem;">
+                  <button class="ex-tab active" id="tab-btn-ai-critique" onclick="switchAiResultTab('critique')">Diagnóstico Crítico</button>
+                  <button class="ex-tab" id="tab-btn-ai-improved" onclick="switchAiResultTab('improved')">Prompt Optimizado</button>
+                </div>
+
+                <!-- Contenido Pestañas -->
+                <div id="ai-result-critique" style="flex:1; overflow-y:auto; font-size:0.9rem; white-space:pre-wrap; line-height:1.6; color:#E5E7EB;">
+                  Aquí aparecerá la crítica y el diagnóstico detallado de la IA...
+                </div>
+                <div id="ai-result-improved" style="flex:1; display:none; flex-direction:column; height: 100%;">
+                  <textarea id="ai-improved-text" class="code-editor" style="flex:1; min-height:150px; background:transparent; border:none; padding:0; margin:0; outline:none; resize:none; color:#34D399; line-height:1.5;" readonly placeholder="Aquí aparecerá el prompt optimizado por la IA..."></textarea>
+                  
+                  <div style="display:flex; gap:0.75rem; margin-top:1rem; border-top:1px solid var(--border-color); padding-top:0.75rem; flex-wrap: wrap;">
+                    <button class="btn btn-secondary" style="font-size:0.8rem; padding:0.4rem 0.8rem;" onclick="sendAiImprovedToPlayground()">Probar en Playground</button>
+                    <button class="btn btn-success" style="font-size:0.8rem; padding:0.4rem 0.8rem;" onclick="openEvolveModalFromAi()">Evolucionar Versión</button>
+                    <button class="btn btn-secondary" style="font-size:0.8rem; padding:0.4rem 0.8rem;" onclick="copyAiImprovedText()">Copiar Texto</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PANEL 7: ASISTENTE EXPERTO & FAQ -->
+      <section id="panel-faq" class="panel">
+        
+        <!-- SECCIÓN: SISTEMA EXPERTO ASISTENTE -->
+        <div class="card">
+          <div class="card-title">
+            <svg style="width:24px;height:24px" viewBox="0 0 24 24"><path fill="currentColor" d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4M12,6A6,6 0 0,1 18,12A6,6 0 0,1 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6M12,8A4,4 0 0,0 8,12A4,4 0 0,0 12,16A4,4 0 0,0 16,12A4,4 0 0,0 12,8Z" /></svg>
+            Asistente del Sistema Experto (Guía de Campos)
+          </div>
+          <p class="mb-4" style="color: var(--text-muted);">
+            ¿Tienes dudas sobre qué datos colocar en algún campo del panel o de los ejercicios? Selecciona la opción correspondiente y el sistema experto te explicará la estructura técnica, el formato esperado y un ejemplo.
+          </p>
+          
+          <div class="grid-2">
+            <div>
+              <label for="expert-field-select">Selecciona el campo o sección a consultar:</label>
+              <select id="expert-field-select">
+                <option value="">-- Elige una sección --</option>
+                <!-- Ejercicio 1 -->
+                <option value="ex1_tax">Ejercicio 1: Ruta Taxonómica</option>
+                <option value="ex1_vars">Ejercicio 1: Variables Identificadas</option>
+                <option value="ex1_rag">Ejercicio 1: Selección de RAG</option>
+                <!-- Ejercicio 2 -->
+                <option value="ex2_json">Ejercicio 2: Estructura JSON</option>
+                <!-- Ejercicio 3 -->
+                <option value="ex3_prompt">Ejercicio 3: Plantilla Parametrizada</option>
+                <option value="ex3_doc">Ejercicio 3: Documentación de Variables</option>
+                <!-- Ejercicio 4 -->
+                <option value="ex4_orchestrator">Ejercicio 4: Prompt Orquestador</option>
+                <!-- Ejercicio 5 -->
+                <option value="ex5_version">Ejercicio 5: Versionado Semántico (SemVer)</option>
+                <option value="ex5_changelog">Ejercicio 5: Changelog de Cambios</option>
+                <!-- Playground -->
+                <option value="play_template">Playground: Plantilla Base</option>
+                <!-- Conversor -->
+                <option value="conv_yaml">Conversor: YAML Frontmatter</option>
+                <!-- Nuevas Funcionalidades y Persistencia -->
+                <option value="db_hybrid">Persistencia: Modo Híbrido (SQLite / LocalStorage)</option>
+                <option value="cat_search">Buscador: Filtrado por Texto y Tags</option>
+                <option value="flow_evolve">Evolución: Ciclo de Vida SemVer Automático</option>
+                <option value="edit_status">Edición y Estados de Gobernanza</option>
+                <option value="ai_evaluator">Evaluador IA y Ollama</option>
+                <option value="gpl_license">Licencia de Código Abierto (GPL v3)</option>
+              </select>
+            </div>
+            <div>
+              <div id="expert-explanation-box" style="background-color: rgba(99, 102, 241, 0.03); border: 1px dashed var(--primary); padding: 1.5rem; border-radius: 8px; min-height: 180px; display: flex; align-items: center; justify-content: center; text-align: center; color: var(--text-muted);">
+                Selecciona una opción a la izquierda para desplegar el análisis del sistema experto.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECCIÓN: DEEP DIVE EN VERSIONADO DE PROMPTS -->
+        <div class="card">
+          <div class="card-title">
+            <svg style="width:24px;height:24px" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm1 14h-2v-6h2v6zm0-8h-2V6h2v2z"/></svg>
+            Guía Avanzada: Versionado Semántico de Prompts (SemVer)
+          </div>
+          <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.25rem;">
+            Un prompt no es estático; evoluciona a medida que los modelos de lenguaje cambian, se descubren vulnerabilidades (prompt injection) o cambian las necesidades de negocio. Tratar a los prompts con la disciplina del versionado de software es fundamental para la calidad e integración continua.
+          </p>
+
+          <div class="info-box" style="background-color: rgba(245, 158, 11, 0.03); border-left-color: var(--warning);">
+            <h4 style="color: #FBBF24;">
+              <svg style="width:18px;height:18px; margin-right: 0.25rem;" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2L1 21h22L12 2zm0 3.99L19.53 19H4.47L12 5.99zM13 16h-2v2h2v-2zm0-6h-2v4h2v-4z"/></svg>
+              Regla de Oro del Versionado de Prompts
+            </h4>
+            <p>Los prompts actúan como <strong>contratos de API</strong>. Si modificas los nombres de las variables internas que una aplicación inyecta automáticamente, romperás la integración. Es por ello que debes versionar tus prompts siguiendo la regla semántica <strong>Mayor.Menor.Parche</strong>.</p>
+          </div>
+
+          <table class="version-table mb-6">
+            <thead>
+              <tr>
+                <th style="width: 15%;">Tipo de Cambio</th>
+                <th style="width: 20%;">Esquema SemVer</th>
+                <th style="width: 35%;">Descripción del Cambio</th>
+                <th style="width: 30%;">Ejemplo Práctico</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>PARCHE (Patch)</strong></td>
+                <td><code>x.y.PATCH</code> (ej. 1.0.0 &rarr; 1.0.1)</td>
+                <td>Cambios de formato que no alteran la lógica operativa ni las variables de entrada.</td>
+                <td>Corrección de erratas, añadir tildes, clarificar la redacción de un ejemplo interno.</td>
+              </tr>
+              <tr>
+                <td><strong>MENOR (Minor)</strong></td>
+                <td><code>x.MINOR.0</code> (ej. 1.0.0 &rarr; 1.1.0)</td>
+                <td>Adición de nuevas variables (placeholders) opcionales u obligatorias, o ligeros cambios en las instrucciones que modifican el formato de la respuesta.</td>
+                <td>Añadir la variable <code>{TIPO_DE_CAMBIO}</code> a un prompt financiero, o forzar que el formato de salida sea tabla en vez de lista.</td>
+              </tr>
+              <tr>
+                <td><strong>MAYOR (Major)</strong></td>
+                <td><code>MAJOR.0.0</code> (ej. 1.0.0 &rarr; 2.0.0)</td>
+                <td>Cambio radical en la lógica, eliminación de variables que rompe integraciones anteriores, o migración de modelo que requiere reestructurar todo el prompt.</td>
+                <td>Cambiar el modelo de GPT-4 a Claude 3.5 Sonnet reescribiendo la lógica Few-shot a XML tags, o eliminar variables clave como <code>{documento}</code>.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- SECCIÓN: FAQ PARA ALUMNOS -->
+        <div class="card">
+          <div class="card-title">Preguntas Frecuentes (FAQ) del Taller</div>
+          <p class="mb-4" style="color: var(--text-muted);">
+            Respuestas a las dudas más comunes sobre ingeniería de prompts avanzados, repositorios y plantillas.
+          </p>
+
+          <details>
+            <summary>¿Por qué usamos un doble formato (Markdown YAML + JSON)?</summary>
+            <div class="faq-answer">
+              El doble formato resuelve el problema de tener distintos tipos de usuarios en un equipo de IA. Los <strong>curadores y editores humanos</strong> necesitan redactar prompts en archivos legibles y fáciles de auditar (Markdown con YAML Frontmatter es ideal porque es texto plano formateado). En cambio, los <strong>sistemas de software e integraciones de API</strong> necesitan leer metadatos de forma estructurada para inyectar variables (el formato JSON es el estándar de comunicación en desarrollo web). Compilar automáticamente de MD a JSON es el puente perfecto.
+            </div>
+          </details>
+
+          <details>
+            <summary>¿Qué diferencia hay entre un Prompt de Sistema y un Prompt de Usuario?</summary>
+            <div class="faq-answer">
+              El <strong>Prompt de Sistema (System Prompt)</strong> define la personalidad, las reglas de negocio, las limitaciones operativas, el tono y la estructura general del modelo (es la directiva superior). El <strong>Prompt de Usuario (User Prompt)</strong> le entrega al modelo los datos específicos de entrada para procesar (las variables como {texto_cliente} o {NDA}). En bibliotecas de prompts, la plantilla semilla suele representar el System Prompt o una instrucción unificada.
+            </div>
+          </details>
+
+          <details>
+            <summary>¿Qué es y cuándo se requiere la recuperación de contexto (RAG)?</summary>
+            <div class="faq-answer">
+              <strong>RAG (Retrieval-Augmented Generation)</strong> consiste en buscar información relevante en bases de datos externas de la empresa e inyectar ese contenido en el prompt del LLM en tiempo de ejecución. Se requiere (RAG = true) cuando el prompt debe analizar un documento que el modelo no conoce de antemano (como contratos específicos de clientes, manuales internos de productos actualizados ayer o balances contables del trimestre en curso).
+            </div>
+          </details>
+
+          <details>
+            <summary>¿Cómo afecta la temperatura a la consistencia de una plantilla?</summary>
+            <div class="faq-answer">
+              La <strong>Temperatura</strong> controla la aleatoriedad de las respuestas de un modelo de lenguaje. Para prompts de bibliotecas organizadas que buscan reportes, análisis sintácticos o conversión de formatos consistentes, la temperatura debe configurarse baja (ej. <code>0.0</code> a <code>0.2</code>). Para prompts creativos (hilos de redes sociales, brainstorming), se permite una temperatura mayor (ej. <code>0.7</code> o <code>0.8</code>).
+            </div>
+          </details>
+
+          <details>
+            <summary>¿Qué es y para qué sirve el Meta-Prompting en etapas?</summary>
+            <div class="faq-answer">
+              El Meta-Prompting es la técnica de utilizar la inteligencia del propio LLM para que actúe como un diseñador de prompts. En vez de escribir prompts complejos por prueba y error, usamos un <strong>Auto-meta Prompt</strong> para estructurar una plantilla optimizada. La <strong>Orquestación</strong> delega tareas específicas a roles expertos para mitigar alucinaciones, y el <strong>Refinamiento Iterativo</strong> somete el borrador del prompt a una rúbrica autónoma para pulirlo continuamente.
+            </div>
+          </details>
+
+          <details>
+            <summary>¿Cómo funciona la persistencia en base de datos SQLite y qué pasa si no inicio el servidor?</summary>
+            <div class="faq-answer">
+              El sitio cuenta con una <strong>arquitectura híbrida de persistencia</strong>. Al cargar la página, el frontend intenta conectarse a la API local de Python (<code>/api/prompts</code>). Si el servidor está corriendo (<code>python server.py</code>), las operaciones de lectura, guardado y eliminación se realizan de manera persistente en la base de datos relacional SQLite (<code>prompts.db</code>). Si el servidor está apagado o inaccesible, el sitio conmuta automáticamente a <strong>Modo Local (localStorage)</strong> del navegador. Esto garantiza que la aplicación siga funcionando y permita añadir, compilar y evolucionar prompts localmente sin interrumpir la clase.
+            </div>
+          </details>
+
+          <details>
+            <summary>¿Cómo funciona la evolución automática bajo las reglas de SemVer en la interfaz?</summary>
+            <div class="faq-answer">
+              Cuando modificas un prompt en cualquiera de las herramientas (Playground, Meta-Prompting, Conversor) y presionas <strong>"Evolucionar Prompt"</strong>, el sistema realiza el cálculo matemático de SemVer de forma automatizada:
+              <ul>
+                <li><strong>Parche (Patch)</strong>: Incrementa el tercer dígito (ej: <code>1.0.0 &rarr; 1.0.1</code>) para correcciones ortográficas o gramaticales sin cambio de variables.</li>
+                <li><strong>Menor (Minor)</strong>: Incrementa el segundo dígito y resetea el parche (ej: <code>1.0.1 &rarr; 1.1.0</code>) cuando el sistema detecta de forma autónoma que has agregado nuevas variables opcionales o placeholders al prompt.</li>
+                <li><strong>Mayor (Major)</strong>: Incrementa el primer dígito y resetea los demás (ej: <code>1.1.0 &rarr; 2.0.0</code>) para rediseños estructurales completos o cambios de modelos incompatibles.</li>
+              </ul>
+              Esto previene errores de digitación y asegura la coherencia. Cabe destacar que <strong>el repositorio conserva todas las versiones anteriores de forma íntegra en la base de datos (SQLite / LocalStorage)</strong> en lugar de sobrescribirlas. Esto crea un historial de versiones completo que permite utilizar o modificar varias versiones del mismo prompt de manera simultánea en producción, según lo requieran diferentes aplicaciones o flujos operativos.
+            </div>
+          </details>
+
+          <details>
+            <summary>¿Cómo puedo buscar y filtrar prompts por etiquetas?</summary>
+            <div class="faq-answer">
+              La biblioteca semilla y los nuevos prompts que registres incluyen un metadato de tipo lista llamado <code>tags</code>. Para facilitar su búsqueda, implementamos una <strong>barra de búsqueda en tiempo real</strong> que escanea el texto del prompt, su nombre, descripción, taxonomía y variables. Adicionalmente, el sistema extrae automáticamente todas las etiquetas de los prompts registrados en el repositorio y dibuja botones interactivos. Al hacer clic en un tag, el catálogo reduce la vista para mostrar únicamente los prompts asociados a dicha etiqueta, permitiendo combinar filtros fácilmente.
+            </div>
+          </details>
+
+          <details>
+            <summary>¿Cómo edito un prompt existente y qué significan sus "Estados de Gobernanza"?</summary>
+            <div class="faq-answer">
+              Para realizar correcciones tipográficas o modificar detalles de un prompt sin incrementar su versión, puedes usar el botón <strong>"Editar"</strong> en la ficha del prompt. Al abrir el formulario de edición, podrás cambiar todos sus campos incluyendo la plantilla e instrucción. Adicionalmente, puedes asignarle un <strong>Estado de Gobernanza</strong>:
+              <ul>
+                <li><strong>En Producción (Verde)</strong>: El prompt está completamente validado y listo para ser consumido de forma general por las aplicaciones u operadores.</li>
+                <li><strong>En Revisión (Amarillo)</strong>: Se están evaluando cambios o rendimiento en esta plantilla antes de aprobarla.</li>
+                <li><strong>Borrador (Gris)</strong>: Una plantilla en fase inicial de diseño que no debe emplearse en flujos productivos.</li>
+                <li><strong>Deprecado (Rojo)</strong>: El prompt es obsoleto o ha sido reemplazado por versiones más estables. Se mantiene por trazabilidad pero no se aconseja su uso.</li>
+              </ul>
+              Puedes filtrar rápidamente los prompts en tu catálogo seleccionando el estado deseado en el selector de filtros al lado del buscador.
+            </div>
+          </details>
+
+          <details>
+            <summary>¿Cómo funciona el Evaluador de Prompts por IA y cómo resuelvo bloqueos de CORS con Ollama?</summary>
+            <div class="faq-answer">
+              El <strong>Evaluador IA</strong> envía el prompt del usuario y un System Prompt Experto de Ingeniería de Prompts a los servicios de <strong>Google Gemini</strong>, <strong>OpenAI</strong> o <strong>Ollama</strong>. La IA audita la claridad, variables y estructura del prompt (aplicando principios como XML, normalización de placeholders y Chain of Thought), y devuelve un diagnóstico crítico y una propuesta de plantilla optimizada dentro de etiquetas XML <code>&lt;improved_prompt&gt;</code> para extracción automática.
+              <br><br>
+              <strong>CORS con Ollama local:</strong> Los navegadores modernos bloquean por seguridad (política de mismo origen) las peticiones directas desde páginas locales a servicios que corren en localhost. Para solucionar esto en Ollama, debes iniciar el servidor permitiendo orígenes externos. En la consola de Windows ejecuta:
+              <br>
+              <code style="display:block; background:rgba(0,0,0,0.3); padding:0.5rem; margin-top:0.25rem; font-family:var(--font-mono); color:#10B981; overflow-x: auto;">cmd /c "set OLLAMA_ORIGINS=* && ollama serve"</code>
+              <br>
+              Una vez reiniciado Ollama con esa variable de entorno, presiona el botón <strong>🔄 Cargar</strong> en el panel para consultar dinámicamente todos los modelos instalados en tu máquina local.
+            </div>
+          </details>
+
+          <details>
+            <summary>¿Qué garantiza la Licencia GNU GPL v3 agregada a este proyecto?</summary>
+            <div class="faq-answer">
+              Este proyecto está licenciado bajo la <strong>Licencia Pública General GNU versión 3 (GPL v3)</strong>. Garantiza que el software y todo su código fuente sigan siendo 100% libres y gratuitos. Al mismo tiempo, protege de forma estricta los derechos de autoría de <strong>Gabriel Sessa (2026)</strong>. Cualquier persona que redistribuya, modifique o incorpore este código en otro proyecto está legalmente obligada a compartir sus modificaciones bajo la misma licencia GPL v3 (copyleft fuerte), impidiendo que el software sea convertido en un producto cerrado o comercial privado.
+            </div>
+          </details>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- EVOLVE PROMPT MODAL (SemVer increment and save) -->
+  <div class="modal" id="evolve-modal">
+    <div class="modal-content" style="max-width: 500px;">
+      <button class="close-modal" id="btn-close-evolve">&times;</button>
+      <div class="prompt-viewer-title" style="font-size: 1.35rem; margin-bottom: 0.5rem;">Evolucionar Prompt</div>
+      <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:1.5rem;">
+        Calcula una nueva versión de tu plantilla siguiendo las directivas del Versionado Semántico (SemVer).
+      </p>
+
+      <div class="mb-4">
+        <label>Prompt actual:</label>
+        <div style="font-size:0.95rem; font-weight:600; color:white;" id="evolve-current-name">-</div>
+        <div style="font-size:0.85rem; color:var(--text-muted);" id="evolve-current-version">v-</div>
+      </div>
+
+      <div class="mb-4">
+        <label for="evolve-type">Tipo de Cambio / Incremento:</label>
+        <select id="evolve-type">
+          <option value="patch">Parche (ej. x.y.1) - Erratas o cambios de redacción menores</option>
+          <option value="minor" selected>Menor (ej. x.1.0) - Nuevas variables o cambios de formato</option>
+          <option value="major">Mayor (ej. 2.0.0) - Reescritura total o cambio de modelo de destino</option>
+        </select>
+      </div>
+
+      <div class="mb-4">
+        <label for="evolve-changelog-text">Changelog (Registro de Cambios):</label>
+        <textarea id="evolve-changelog-text" style="height: 80px;" placeholder="ej. Agregada la variable {NUEVO_CAMPO} y ajustado el tono de salida."></textarea>
+      </div>
+
+      <div class="mb-4">
+        <label>Importar texto de prompt desde:</label>
+        <select id="evolve-source-content">
+          <option value="playground">Compilador de Plantillas (Playground)</option>
+          <option value="metaprompt">Meta-Prompt Generado (Salida)</option>
+          <option value="converter">Conversor (Caja de Entrada)</option>
+          <option value="ai-improved">Prompt Optimizado por IA (Evaluador IA)</option>
+          <option value="current">Mantener texto original de la base de datos</option>
+        </select>
+      </div>
+
+      <div class="mb-6">
+        <label for="evolve-status">Actualizar Estado del Prompt:</label>
+        <select id="evolve-status">
+          <option value="produccion">En Producción</option>
+          <option value="revision">En Revisión</option>
+          <option value="borrador">Borrador</option>
+          <option value="deprecado">Deprecado</option>
+        </select>
+      </div>
+
+      <div style="display:flex; gap:1rem;">
+        <button class="btn btn-success" id="btn-save-evolve">Evolucionar y Guardar</button>
+        <button class="btn btn-secondary" id="btn-cancel-evolve">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROMPT VIEW MODAL -->
+  <div class="modal" id="prompt-modal">
+    <div class="modal-content">
+      <button class="close-modal" id="btn-close-modal">&times;</button>
+      <div class="prompt-viewer-title" id="modal-prompt-name">Nombre del Prompt</div>
+      
+      <div class="meta-grid">
+        <div class="meta-item">
+          <span class="meta-label">Versión</span>
+          <span class="meta-val" id="modal-prompt-version">1.0.0</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Modelos Validados</span>
+          <span class="meta-val" id="modal-prompt-models">GPT-4o, Claude 3.5</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Requiere RAG</span>
+          <span class="meta-val" id="modal-prompt-rag">No</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Ubicación Taxonómica</span>
+          <span class="meta-val" id="modal-prompt-tax">marketing/redes_sociales</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Estado del Prompt</span>
+          <span class="meta-val" id="modal-prompt-status">En Producción</span>
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <span class="meta-label">Descripción de Uso</span>
+        <p id="modal-prompt-desc" style="color: var(--text-main); font-size: 0.95rem;"></p>
+      </div>
+
+      <div class="mb-4">
+        <span class="meta-label">Etiquetas</span>
+        <div id="modal-prompt-tags" style="display: flex; gap: 0.5rem; margin-top: 0.25rem;"></div>
+      </div>
+
+      <div>
+        <span class="meta-label">Instrucción y Plantilla de Prompt (JSON "prompt_text")</span>
+        <pre class="preview-box" id="modal-prompt-text" style="max-height: 250px; background-color: rgba(0,0,0,0.4);"></pre>
+      </div>
+      
+      <div class="mt-6" style="display: flex; gap: 1rem; flex-wrap: wrap;">
+        <button class="btn btn-success" id="modal-btn-activate">Activar en Ciclo de Vida</button>
+        <button class="btn" id="modal-btn-use">Cargar en el Compilador</button>
+        <button class="btn btn-secondary" id="modal-btn-edit">Editar</button>
+        <button class="btn btn-secondary" id="modal-btn-copy">Copiar Texto</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- EDIT PROMPT MODAL (Direct edits) -->
+  <div class="modal" id="edit-prompt-modal">
+    <div class="modal-content">
+      <button class="close-modal" id="btn-close-edit-prompt">&times;</button>
+      <div class="prompt-viewer-title" style="font-size: 1.5rem; margin-bottom: 0.5rem;">Editar Datos de Prompt</div>
+      <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:1.5rem;">
+        Modifica la información y plantilla del prompt. Se actualizarán los cambios directamente en tu repositorio sin forzar evolución de versión.
+      </p>
+
+      <div class="grid-2">
+        <div>
+          <label for="edit-p-name">Nombre descriptivo:</label>
+          <input type="text" id="edit-p-name" placeholder="Nombre descriptivo">
+
+          <label for="edit-p-id">ID único (Clave Primaria - Lectura únicamente):</label>
+          <input type="text" id="edit-p-id" disabled style="opacity: 0.6; cursor: not-allowed; background-color: rgba(0,0,0,0.3);">
+
+          <label for="edit-p-tax">Ruta Taxonómica (Jerarquía):</label>
+          <input type="text" id="edit-p-tax" placeholder="ej: legal/contratos">
+
+          <label for="edit-p-rag">¿Requiere RAG?</label>
+          <select id="edit-p-rag">
+            <option value="false">No (RAG = False)</option>
+            <option value="true">Sí (RAG = True)</option>
+          </select>
+
+          <label for="edit-p-status">Estado del Prompt:</label>
+          <select id="edit-p-status">
+            <option value="produccion">En Producción</option>
+            <option value="revision">En Revisión</option>
+            <option value="borrador">Borrador</option>
+            <option value="deprecado">Deprecado</option>
+          </select>
+        </div>
+        <div>
+          <label for="edit-p-models">Modelos recomendados (separados por comas):</label>
+          <input type="text" id="edit-p-models" placeholder="Claude 3.5 Sonnet, GPT-4o">
+
+          <label for="edit-p-vars">Variables placeholders (separadas por comas):</label>
+          <input type="text" id="edit-p-vars" placeholder="contrato_texto, jurisdiccion">
+
+          <label for="edit-p-tags">Etiquetas clave (separadas por comas):</label>
+          <input type="text" id="edit-p-tags" placeholder="legal, contratos">
+
+          <label for="edit-p-desc">Breve descripción del caso de uso:</label>
+          <input type="text" id="edit-p-desc" placeholder="Descripción del prompt...">
+        </div>
+      </div>
+
+      <label for="edit-p-text">Instrucción y Plantilla del Prompt:</label>
+      <textarea id="edit-p-text" class="code-editor" style="height:150px;" placeholder="Escribe la plantilla del prompt aquí..."></textarea>
+
+      <div style="display:flex; gap:1rem;">
+        <button class="btn btn-success" id="btn-save-edit-prompt">Guardar Cambios</button>
+        <button class="btn btn-secondary" id="btn-cancel-edit-prompt">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Initial Seed Database
+    const PROMPT_DATABASE = {
+      creador_hilos: {
+        id: "creador_hilos",
+        name: "Creador de Hilos de Contenido",
+        version: "1.0.0",
+        description: "Generador de hilos secuenciales atractivos para Twitter/X y LinkedIn a partir de un tema central.",
+        compatible_models: ["Claude 3.5 Sonnet", "GPT-4o"],
+        variables: ["tema", "canales", "tono", "n_tweets"],
+        rag_context: false,
+        tax: "marketing/redes_sociales",
+        tags: ["marketing", "redes_sociales", "copywriting", "hilos"],
+        prompt_text: "Eres un redactor creativo experto y estratega de marca personal en redes sociales. Tu tarea es redactar un hilo de contenido secuencial optimizado para los canales de {canales} basándote en la siguiente temática central: {tema}.\n\nSigue estas pautas estrictas al redactar el hilo:\n1. El número total de publicaciones del hilo debe ser exactamente de {n_tweets}.\n2. Adopta un tono {tono}.\n3. El primer tuit/post debe ser un \"gancho\" (hook) magnético que incite al lector a abrir el hilo, planteando una pregunta provocadora, una estadística sorprendente o un dolor común.\n4. Cada post intermedio del hilo debe aportar un valor práctico o una lección, utilizando un formato estructurado con viñetas cortas si es posible para facilitar la lectura.\n5. El post final del hilo debe incluir un llamado a la acción (CTA) claro, invitando a la audiencia a interactuar (comentar, compartir o dar me gusta).\n6. Respeta los límites de caracteres por red social (280 para Twitter, pero mantén un buen espacio en blanco).\n\nGenera el hilo numerando claramente cada sección: \"Post 1\", \"Post 2\", etc.",
+        yaml_frontmatter: "name: \"Creador de Hilos de Contenido\"\nversion: \"1.0.0\"\ndescription: \"Generador de hilos secuenciales atractivos para Twitter/X y LinkedIn a partir de un tema central.\"\ncompatible_models:\n  - \"Claude 3.5 Sonnet\"\n  - \"GPT-4o\"\nvariables:\n  - \"tema\"\n  - \"canales\"\n  - \"tono\"\n  - \"n_tweets\"\nrag_context: false\ntags:\n  - \"marketing\"\n  - \"redes_sociales\"\n  - \"copywriting\"\n  - \"hilos\"",
+        status: "produccion"
+      },
+      respuesta_empatica: {
+        id: "respuesta_empatica",
+        name: "Respuesta Empática de Soporte",
+        version: "1.1.0",
+        description: "Plantilla para redactar respuestas de soporte técnico personalizadas, claras y empáticas para clientes frustrados.",
+        compatible_models: ["Claude 3.5 Sonnet", "GPT-4o", "Llama-3-70b"],
+        variables: ["producto", "cliente", "problema"],
+        rag_context: false,
+        tax: "soporte/atencion_cliente",
+        tags: ["soporte", "atencion_cliente", "empatia", "operaciones"],
+        prompt_text: "Eres un agente senior de soporte técnico para {producto}. Tu objetivo es redactar una respuesta profesional, empática y resolutiva dirigida a nuestro cliente {cliente}, quien está experimentando el siguiente problema: {problema}.\n\nEstructura tu respuesta exactamente en los siguientes pasos:\n1. **Saludo Personalizado y Validación del Sentimiento**: Saluda a {cliente} por su nombre. Expresa de forma genuina que comprendes su molestia y valida su frustración sin culpar a terceros.\n2. **Explicación del Problema**: Si el problema es común, describe brevemente por qué ocurre en términos sencillos.\n3. **Plan de Acción / Solución**: Proporciona de 2 a 4 pasos numerados y claros para resolver el problema o indica cuál es el siguiente paso que daremos desde el equipo técnico.\n4. **Cierre Amigable y Canal de Seguimiento**: Finaliza reiterando tu disposición a ayudar, utilizando un tono profesional y optimista.",
+        yaml_frontmatter: "name: \"Respuesta Empática de Soporte\"\nversion: \"1.1.0\"\ndescription: \"Plantilla para redactar respuestas de soporte técnico personalizadas, claras y empáticas para clientes frustrados.\"\ncompatible_models:\n  - \"Claude 3.5 Sonnet\"\n  - \"GPT-4o\"\n  - \"Llama-3-70b\"\nvariables:\n  - \"producto\"\n  - \"cliente\"\n  - \"problema\"\nrag_context: false\ntags:\n  - \"soporte\"\n  - \"atencion_cliente\"\n  - \"empatia\"\n  - \"operaciones\"",
+        status: "produccion"
+      }
+    };
+
+    // State Variables
+    let CURRENT_PROMPTS = {};
+    let activePrompt = null;
+    let dbMode = "local"; // "sqlite" o "local"
+
+    // Navigation and Tab Switching Logic
+    const navItems = document.querySelectorAll('.nav-item');
+    const panels = document.querySelectorAll('.panel');
+    const pageTitle = document.getElementById('page-title');
+    const pageDesc = document.getElementById('page-desc');
+
+    const headers_info = {
+      dashboard: {
+        title: "Biblioteca de Prompts Semilla",
+        desc: "Explora el catálogo, la estructura taxonómica y los metadatos de los prompts optimizados."
+      },
+      playground: {
+        title: "Compilador de Variables de Prompts",
+        desc: "Prueba las plantillas inyectando valores reales de forma interactiva."
+      },
+      converter: {
+        title: "Compilador de Formato Humano-Máquina",
+        desc: "Convierte cabeceras YAML de Markdown a JSON estándar para integraciones automáticas."
+      },
+      exercises: {
+        title: "Autoevaluación de Ejercicios Prácticos",
+        desc: "Resuelve los ejercicios y obtén retroalimentación inmediata sobre la calidad e integridad de tu trabajo."
+      },
+      metaprompt: {
+        title: "Asistente de Meta-Prompting",
+        desc: "Utiliza técnicas avanzadas para generar prompts óptimos guiado por la propia Inteligencia Artificial."
+      },
+      "ai-evaluator": {
+        title: "Evaluador de Prompts por IA",
+        desc: "Conéctate a APIs de IA (Gemini, OpenAI, Ollama) para analizar, auditar y mejorar tus instrucciones automáticamente."
+      },
+      faq: {
+        title: "Asistente Experto & Preguntas Frecuentes",
+        desc: "Aprende conceptos avanzados de versionado de prompts y resuelve tus dudas con nuestro sistema experto."
+      }
+    };
+
+    navItems.forEach(item => {
+      item.addEventListener('click', () => {
+        const tab = item.getAttribute('data-tab');
+        
+        navItems.forEach(nav => nav.classList.remove('active'));
+        panels.forEach(panel => panel.classList.remove('active'));
+        
+        item.classList.add('active');
+        document.getElementById(`panel-${tab}`).classList.add('active');
+        
+        pageTitle.innerText = headers_info[tab].title;
+        pageDesc.innerText = headers_info[tab].desc;
+      });
+    });
+
+    // Database Sync status
+    function updateDbStatusBadge() {
+      const badge = document.getElementById('db-status-badge');
+      if (dbMode === "sqlite") {
+        badge.innerText = "Conectado a SQLite Local";
+        badge.className = "badge badge-success";
+      } else {
+        badge.innerText = "Offline - Almacenamiento Local";
+        badge.className = "badge badge-warning";
+      }
+    }
+
+    // Load Prompts from Server or localStorage
+    async function loadPrompts() {
+      try {
+        const response = await fetch('/api/prompts');
+        if (response.ok) {
+          const data = await response.json();
+          dbMode = "sqlite";
+          updateDbStatusBadge();
+          CURRENT_PROMPTS = {};
+          data.forEach(p => {
+            const key = p.id + "@" + p.version;
+            CURRENT_PROMPTS[key] = p;
+          });
+          renderTagFilters();
+          renderCatalog();
+          populateDropdowns();
+          return;
+        }
+      } catch (e) {
+        console.log("No se pudo conectar a la base de datos SQLite. Usando localStorage.");
+      }
+
+      dbMode = "local";
+      updateDbStatusBadge();
+      const localData = localStorage.getItem('prompt_repos_db');
+      if (localData) {
+        const parsed = JSON.parse(localData);
+        // Migración automática: si las claves no tienen '@', el formato es antiguo (id puro)
+        const needsMigration = Object.keys(parsed).some(k => !k.includes('@'));
+        if (needsMigration) {
+          console.log('[Migración] Detectado formato antiguo en localStorage. Migrando a clave compuesta id@version...');
+          CURRENT_PROMPTS = {};
+          Object.values(parsed).forEach(p => {
+            // Asegurar que el objeto tenga 'version'; si no, usar '1.0.0'
+            if (!p.version) p.version = '1.0.0';
+            CURRENT_PROMPTS[p.id + "@" + p.version] = p;
+          });
+          saveToLocalStorage();
+          console.log('[Migración] Completada. Prompts migrados:', Object.keys(CURRENT_PROMPTS).length);
+        } else {
+          CURRENT_PROMPTS = parsed;
+        }
+      } else {
+        // Inicializar con la base semilla por defecto mapeada por id@version
+        CURRENT_PROMPTS = {};
+        Object.values(PROMPT_DATABASE).forEach(p => {
+          CURRENT_PROMPTS[p.id + "@" + p.version] = p;
+        });
+        saveToLocalStorage();
+      }
+      renderTagFilters();
+      renderCatalog();
+      populateDropdowns();
+    }
+
+    function saveToLocalStorage() {
+      localStorage.setItem('prompt_repos_db', JSON.stringify(CURRENT_PROMPTS));
+    }
+
+    async function savePrompt(promptObj) {
+      if (dbMode === "sqlite") {
+        try {
+          const response = await fetch('/api/prompts', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(promptObj)
+          });
+          if (response.ok) {
+            await loadPrompts();
+            return true;
+          }
+        } catch (e) {
+          console.error("Error al persistir en SQLite:", e);
+        }
+      }
+
+      CURRENT_PROMPTS[promptObj.id + "@" + promptObj.version] = promptObj;
+      saveToLocalStorage();
+      renderTagFilters();
+      renderCatalog();
+      populateDropdowns();
+      return true;
+    }
+
+    async function deletePrompt(key) {
+      const [id, version] = key.split('@');
+      if (confirm(`¿Estás seguro de eliminar la versión v${version} del prompt '${id}' de tu repositorio?`)) {
+        if (dbMode === "sqlite") {
+          try {
+            const response = await fetch(`/api/prompts?id=${encodeURIComponent(id)}&version=${encodeURIComponent(version)}`, {
+              method: 'DELETE'
+            });
+            if (response.ok) {
+              if (activePrompt && activePrompt.id === id && activePrompt.version === version) {
+                deactivatePrompt();
+              }
+              await loadPrompts();
+              return;
+            }
+          } catch (e) {
+            console.error("Error al eliminar de SQLite:", e);
+          }
+        }
+
+        if (activePrompt && activePrompt.id === id && activePrompt.version === version) {
+          deactivatePrompt();
+        }
+        delete CURRENT_PROMPTS[key];
+        saveToLocalStorage();
+        renderTagFilters();
+        renderCatalog();
+        populateDropdowns();
+      }
+    }
+
+    // --- LIFECYCLE BAR CONTROLS ---
+    function syncActivePromptBanner() {
+      if (!activePrompt) {
+        document.getElementById('active-prompt-banner').style.display = 'none';
+        return;
+      }
+      
+      document.getElementById('active-prompt-name').innerText = activePrompt.name;
+      document.getElementById('active-prompt-version').innerText = `v${activePrompt.version}`;
+      document.getElementById('active-prompt-tax').innerText = activePrompt.tax;
+      
+      const statusEl = document.getElementById('active-prompt-status');
+      if (statusEl) {
+        const statusNames = {
+          produccion: "En Producción",
+          revision: "En Revisión",
+          borrador: "Borrador",
+          deprecado: "Deprecado"
+        };
+        const statusClasses = {
+          produccion: "badge badge-success",
+          revision: "badge badge-warning",
+          borrador: "badge badge-secondary",
+          deprecado: "badge"
+        };
+        
+        const pStatus = activePrompt.status || 'produccion';
+        statusEl.innerText = statusNames[pStatus] || "En Producción";
+        statusEl.className = statusClasses[pStatus] || "badge badge-success";
+        if (pStatus === 'deprecado') {
+          statusEl.style.cssText = "background-color: rgba(239, 68, 68, 0.15); color: #EF4444; border: 1px solid rgba(239, 68, 68, 0.3); margin-left: 0.5rem; font-size:0.7rem;";
+        } else {
+          statusEl.style.cssText = "margin-left: 0.5rem; font-size:0.7rem;";
+        }
+        statusEl.style.display = 'inline-flex';
+      }
+      
+      document.getElementById('active-prompt-banner').style.display = 'flex';
+    }
+
+    function activatePrompt(key) {
+      if (CURRENT_PROMPTS[key]) {
+        activePrompt = CURRENT_PROMPTS[key];
+        syncActivePromptBanner();
+        
+        // Cargar en el Playground dropdown y disparar carga de template
+        const playSelect = document.getElementById('playground-select-prompt');
+        playSelect.value = key;
+        playSelect.dispatchEvent(new Event('change'));
+
+        // Sincronizar el selector del Evaluador IA
+        const aiSelect = document.getElementById('ai-select-prompt');
+        if (aiSelect) {
+          aiSelect.value = key;
+          loadPromptIntoAiEvaluator();
+        }
+
+        // Sincronizar el selector del Conversor
+        const convSelect = document.getElementById('converter-select-prompt');
+        if (convSelect) {
+          convSelect.value = key;
+          convSelect.dispatchEvent(new Event('change'));
+        }
+      }
+    }
+
+    function deactivatePrompt() {
+      activePrompt = null;
+      syncActivePromptBanner();
+    }
+
+    function sendActiveTo(tab) {
+      if (!activePrompt) return;
+      
+      const navItem = document.querySelector(`[data-tab="${tab}"]`);
+      if (navItem) {
+        navItem.click();
+      }
+
+      if (tab === 'playground') {
+        document.getElementById('playground-select-prompt').value = activePrompt.id + "@" + activePrompt.version;
+        document.getElementById('playground-template').value = activePrompt.prompt_text;
+        parseVariables();
+      } else if (tab === 'converter') {
+        // Armar YAML + Markdown en el conversor
+        const cmStr = activePrompt.compatible_models.map(m => `  - "${m}"`).join('\n');
+        const vStr = activePrompt.variables.map(v => `  - "${v}"`).join('\n');
+        const tStr = activePrompt.tags.map(t => `  - "${t}"`).join('\n');
+        
+        const yamlFrontmatter = `---
+name: "${activePrompt.name}"
+version: "${activePrompt.version}"
+description: "${activePrompt.description}"
+compatible_models:
+${cmStr}
+variables:
+${vStr}
+rag_context: ${activePrompt.rag_context}
+tags:
+${tStr}
+---
+${activePrompt.prompt_text}`;
+        
+        document.getElementById('converter-input').value = yamlFrontmatter;
+        document.getElementById('converter-output').value = '';
+      } else if (tab === 'metaprompt') {
+        // Cargar datos en el asistente meta-prompt
+        document.getElementById('meta-task').value = activePrompt.description;
+        document.getElementById('meta-expert').value = "Experto en " + activePrompt.name;
+        document.getElementById('meta-inputs').value = activePrompt.variables.join(', ');
+        buildMetaPrompt();
+      }
+    }
+
+    // --- EVOLVE MODAL LOGIC ---
+    function openEvolveModal() {
+      if (!activePrompt) return;
+      
+      document.getElementById('evolve-current-name').innerText = activePrompt.name;
+      document.getElementById('evolve-current-version').innerText = `v${activePrompt.version}`;
+      document.getElementById('evolve-changelog-text').value = '';
+      document.getElementById('evolve-source-content').value = 'playground';
+      document.getElementById('evolve-status').value = activePrompt.status || 'produccion';
+      
+      document.getElementById('evolve-modal').classList.add('active');
+    }
+
+    const btnCloseEvolve = document.getElementById('btn-close-evolve');
+    const btnCancelEvolve = document.getElementById('btn-cancel-evolve');
+    const btnSaveEvolve = document.getElementById('btn-save-evolve');
+
+    [btnCloseEvolve, btnCancelEvolve].forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.getElementById('evolve-modal').classList.remove('active');
+      });
+    });
+
+    btnSaveEvolve.addEventListener('click', async () => {
+      if (!activePrompt) return;
+      
+      const type = document.getElementById('evolve-type').value;
+      const changelog = document.getElementById('evolve-changelog-text').value.trim();
+      const source = document.getElementById('evolve-source-content').value;
+      const status = document.getElementById('evolve-status').value;
+      
+      if (!changelog) {
+        alert("Por favor detalla qué cambios se realizaron en el registro de cambios (Changelog).");
+        return;
+      }
+
+      // SemVer math
+      let verParts = activePrompt.version.split('.').map(Number);
+      if (verParts.length !== 3) {
+        verParts = [1, 0, 0];
+      }
+      
+      if (type === 'patch') {
+        verParts[2]++;
+      } else if (type === 'minor') {
+        verParts[1]++;
+        verParts[2] = 0;
+      } else if (type === 'major') {
+        verParts[0]++;
+        verParts[1] = 0;
+        verParts[2] = 0;
+      }
+      
+      const newVersion = verParts.join('.');
+      
+      // Obtener el texto del prompt evolucionado
+      let promptText = activePrompt.prompt_text;
+      if (source === 'playground') {
+        promptText = document.getElementById('playground-template').value;
+      } else if (source === 'metaprompt') {
+        // En el generador de metaprompt, el prompt_result es la plantilla que refinamos
+        promptText = document.getElementById('meta-prompt-result').innerText;
+      } else if (source === 'converter') {
+        // Si el usuario parseó un yaml
+        const cvVal = document.getElementById('converter-input').value;
+        const match = cvVal.match(/^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/);
+        if (match) {
+          promptText = match[2].trim();
+        }
+      } else if (source === 'ai-improved') {
+        promptText = document.getElementById('ai-improved-text').value;
+      }
+
+      // Actualizar también variables dinámicamente si cambiaron en el texto
+      const regex = /\{([A-Za-z0-9_]+)\}/g;
+      let match;
+      const newVars = new Set();
+      while ((match = regex.exec(promptText)) !== null) {
+        newVars.add(match[1]);
+      }
+
+      // Crear objeto del prompt evolucionado
+      const evolvedPrompt = {
+        ...activePrompt,
+        version: newVersion,
+        prompt_text: promptText,
+        variables: Array.from(newVars),
+        status: status
+      };
+
+      // Guardar en repositorio SQLite o localStorage
+      const success = await savePrompt(evolvedPrompt);
+      if (success) {
+        activePrompt = evolvedPrompt;
+        syncActivePromptBanner();
+        document.getElementById('evolve-modal').classList.remove('active');
+        alert(`¡Prompt '${activePrompt.name}' evolucionado con éxito a la versión v${activePrompt.version}!`);
+        
+        // Recargar el dropdown de compilación
+        document.getElementById('playground-select-prompt').value = activePrompt.id + "@" + activePrompt.version;
+        document.getElementById('playground-select-prompt').dispatchEvent(new Event('change'));
+      }
+    });
+
+    // --- PANEL 1: CATALOG LOGIC ---
+    const seedPromptsList = document.getElementById('seed-prompts-list');
+    const btnToggleCreate = document.getElementById('btn-toggle-create-prompt');
+    const createPromptCard = document.getElementById('create-prompt-card');
+    const btnCancelCreate = document.getElementById('btn-cancel-new-prompt');
+    const btnSaveCreate = document.getElementById('btn-save-new-prompt');
+
+    btnToggleCreate.addEventListener('click', () => {
+      createPromptCard.style.display = createPromptCard.style.display === 'none' ? 'block' : 'none';
+    });
+
+    btnCancelCreate.addEventListener('click', () => {
+      createPromptCard.style.display = 'none';
+    });
+
+    btnSaveCreate.addEventListener('click', async () => {
+      const name = document.getElementById('new-p-name').value.trim();
+      const id = document.getElementById('new-p-id').value.trim();
+      const tax = document.getElementById('new-p-tax').value.trim();
+      const rag = document.getElementById('new-p-rag').value === 'true';
+      const status = document.getElementById('new-p-status').value;
+      const models = document.getElementById('new-p-models').value.split(',').map(m => m.trim()).filter(m => m !== '');
+      const variables = document.getElementById('new-p-vars').value.split(',').map(v => v.trim()).filter(v => v !== '');
+      const tags = document.getElementById('new-p-tags').value.split(',').map(t => t.trim()).filter(t => t !== '');
+      const desc = document.getElementById('new-p-desc').value.trim();
+      const text = document.getElementById('new-p-text').value.trim();
+
+      if (!name || !id || !text) {
+        alert("Por favor completa los campos obligatorios: Nombre, ID único e Instrucción del prompt.");
+        return;
+      }
+
+      // Validar formato de ID
+      if (!/^[a-z0-9_]+$/.test(id)) {
+        alert("El ID único debe estar en minúsculas, sin espacios ni caracteres especiales (solo letras, números y guiones bajos).");
+        return;
+      }
+
+      const newPromptObj = {
+        id,
+        name,
+        version: "1.0.0",
+        description: desc,
+        compatible_models: models,
+        variables,
+        rag_context: rag,
+        tax: tax || "general",
+        tags,
+        prompt_text: text,
+        status,
+        yaml_frontmatter: `name: "${name}"\nversion: "1.0.0"\ndescription: "${desc}"\ncompatible_models:\n${models.map(m => `  - "${m}"`).join('\n')}\nvariables:\n${variables.map(v => `  - "${v}"`).join('\n')}\nrag_context: ${rag}\ntags:\n${tags.map(t => `  - "${t}"`).join('\n')}`
+      };
+
+      const success = await savePrompt(newPromptObj);
+      if (success) {
+        // Limpiar inputs
+        document.getElementById('new-p-name').value = '';
+        document.getElementById('new-p-id').value = '';
+        document.getElementById('new-p-tax').value = '';
+        document.getElementById('new-p-models').value = '';
+        document.getElementById('new-p-vars').value = '';
+        document.getElementById('new-p-tags').value = '';
+        document.getElementById('new-p-status').value = 'produccion';
+        document.getElementById('new-p-desc').value = '';
+        document.getElementById('new-p-text').value = '';
+        
+        createPromptCard.style.display = 'none';
+        alert(`¡Prompt '${name}' guardado correctamente en la biblioteca!`);
+      }
+    });
+    
+    let activeTagFilter = null;
+
+    function renderTagFilters() {
+      const filterContainer = document.getElementById('catalog-tag-filters');
+      if (!filterContainer) return;
+      
+      const allTags = new Set();
+      Object.values(CURRENT_PROMPTS).forEach(prompt => {
+        if (prompt.tags && Array.isArray(prompt.tags)) {
+          prompt.tags.forEach(t => {
+            if (t.trim()) allTags.add(t.trim().toLowerCase());
+          });
+        }
+      });
+      
+      const uniqueTags = Array.from(allTags).sort();
+      filterContainer.innerHTML = '';
+      
+      // Botón "Todos"
+      const allBtn = document.createElement('span');
+      allBtn.className = activeTagFilter === null ? 'badge badge-primary' : 'badge badge-secondary';
+      allBtn.style.cursor = 'pointer';
+      allBtn.style.transition = 'all 0.2s';
+      allBtn.style.userSelect = 'none';
+      allBtn.innerText = 'Todos';
+      allBtn.addEventListener('click', () => {
+        activeTagFilter = null;
+        renderTagFilters();
+        renderCatalog();
+      });
+      filterContainer.appendChild(allBtn);
+      
+      // Botones para cada etiqueta
+      uniqueTags.forEach(tag => {
+        const btn = document.createElement('span');
+        btn.className = activeTagFilter === tag ? 'badge badge-primary' : 'badge badge-secondary';
+        btn.style.cursor = 'pointer';
+        btn.style.transition = 'all 0.2s';
+        btn.style.userSelect = 'none';
+        btn.innerText = tag;
+        btn.addEventListener('click', () => {
+          if (activeTagFilter === tag) {
+            activeTagFilter = null;
+          } else {
+            activeTagFilter = tag;
+          }
+          renderTagFilters();
+          renderCatalog();
+        });
+        filterContainer.appendChild(btn);
+      });
+    }
+
+    function renderCatalog() {
+      seedPromptsList.innerHTML = '';
+      
+      if (Object.keys(CURRENT_PROMPTS).length === 0) {
+        seedPromptsList.innerHTML = '<div style="color:var(--text-muted); text-align:center; padding: 2rem;">No hay prompts en el repositorio local. ¡Crea uno nuevo!</div>';
+        return;
+      }
+
+      const searchInput = document.getElementById('catalog-search-input');
+      const searchQuery = searchInput ? searchInput.value.toLowerCase().trim() : '';
+
+      const statusFilter = document.getElementById('catalog-status-filter');
+      const selectedStatus = statusFilter ? statusFilter.value : '';
+
+      const filteredPrompts = Object.values(CURRENT_PROMPTS).filter(prompt => {
+        // Filtrar por estado activo
+        if (selectedStatus) {
+          const promptStatus = prompt.status || 'produccion';
+          if (promptStatus !== selectedStatus) return false;
+        }
+
+        // Filtrar por etiqueta activa
+        if (activeTagFilter) {
+          const hasTag = prompt.tags && prompt.tags.some(t => t.toLowerCase() === activeTagFilter);
+          if (!hasTag) return false;
+        }
+        
+        // Filtrar por búsqueda de texto
+        if (searchQuery) {
+          const matchName = prompt.name.toLowerCase().includes(searchQuery);
+          const matchDesc = (prompt.description || '').toLowerCase().includes(searchQuery);
+          const matchTax = (prompt.tax || '').toLowerCase().includes(searchQuery);
+          const matchVars = prompt.variables.some(v => v.toLowerCase().includes(searchQuery));
+          const matchTags = (prompt.tags || []).some(t => t.toLowerCase().includes(searchQuery));
+          const matchPromptText = (prompt.prompt_text || '').toLowerCase().includes(searchQuery);
+          
+          return matchName || matchDesc || matchTax || matchVars || matchTags || matchPromptText;
+        }
+        
+        return true;
+      });
+
+      if (filteredPrompts.length === 0) {
+        seedPromptsList.innerHTML = '<div style="color:var(--text-muted); text-align:center; padding: 2rem;">No se encontraron prompts que coincidan con los filtros aplicados.</div>';
+        return;
+      }
+
+      filteredPrompts.forEach(prompt => {
+        const row = document.createElement('div');
+        row.className = 'prompt-row';
+        
+        // Mapeo de estados a estilos visuales
+        const statusMap = {
+          produccion: { text: "Producción", class: "badge badge-success" },
+          revision: { text: "Revisión", class: "badge badge-warning" },
+          borrador: { text: "Borrador", class: "badge badge-secondary" },
+          deprecado: { text: "Deprecado", style: "background-color: rgba(239, 68, 68, 0.15); color: #EF4444; border: 1px solid rgba(239, 68, 68, 0.3);" }
+        };
+        const pStatus = prompt.status || 'produccion';
+        const sInfo = statusMap[pStatus] || statusMap.produccion;
+        const statusBadgeHTML = sInfo.class 
+          ? `<span class="${sInfo.class}">${sInfo.text}</span>` 
+          : `<span class="badge" style="${sInfo.style}">${sInfo.text}</span>`;
+
+        row.innerHTML = `
+          <div class="prompt-info">
+            <div class="prompt-name">${prompt.name}</div>
+            <div class="prompt-meta">
+              <span><strong>Taxón:</strong> ${prompt.tax}</span>
+              <span><strong>Versión:</strong> v${prompt.version}</span>
+              <span><strong>Variables:</strong> ${prompt.variables.map(v => `{${v}}`).join(', ')}</span>
+            </div>
+          </div>
+          <div style="display:flex; align-items:center; gap:0.5rem;" onclick="event.stopPropagation();">
+            ${statusBadgeHTML}
+            <span class="badge badge-primary">${prompt.tags[0] || 'general'}</span>
+            <button class="btn btn-secondary" style="font-size:0.75rem; padding:0.25rem 0.5rem;" onclick="activatePrompt('${prompt.id}@${prompt.version}')">Activar</button>
+            <button class="btn" style="background-color:var(--error); font-size:0.75rem; padding:0.25rem 0.5rem;" onclick="deletePrompt('${prompt.id}@${prompt.version}')">Eliminar</button>
+          </div>
+        `;
+        row.addEventListener('click', () => openPromptModal(prompt.id + '@' + prompt.version));
+        seedPromptsList.appendChild(row);
+      });
+    }
+
+    function populateDropdowns() {
+      const select = document.getElementById('playground-select-prompt');
+      const currentSelected = select.value;
+      
+      select.innerHTML = '<option value="">-- Pega tu propio prompt o selecciona uno aquí --</option>';
+      
+      const aiSelect = document.getElementById('ai-select-prompt');
+      const currentAiSelected = aiSelect ? aiSelect.value : "";
+      if (aiSelect) {
+        aiSelect.innerHTML = '<option value="">-- Escribe un prompt libre o selecciona uno aquí --</option>';
+      }
+
+      const convSelect = document.getElementById('converter-select-prompt');
+      const currentConvSelected = convSelect ? convSelect.value : "";
+      if (convSelect) {
+        convSelect.innerHTML = '<option value="">-- Pega un prompt o selecciona uno de la base de datos aquí --</option>';
+      }
+      
+      const statusLabels = {
+        produccion: "Producción",
+        revision: "Revisión",
+        borrador: "Borrador",
+        deprecado: "Deprecado"
+      };
+      Object.values(CURRENT_PROMPTS).forEach(prompt => {
+        const key = prompt.id + "@" + prompt.version;
+        const optionText = `${prompt.name} (v${prompt.version}) [${statusLabels[prompt.status || 'produccion'] || 'Producción'}]`;
+        
+        const opt = document.createElement('option');
+        opt.value = key;
+        opt.innerText = optionText;
+        select.appendChild(opt);
+        
+        if (aiSelect) {
+          const optAi = document.createElement('option');
+          optAi.value = key;
+          optAi.innerText = optionText;
+          aiSelect.appendChild(optAi);
+        }
+
+        if (convSelect) {
+          const optConv = document.createElement('option');
+          optConv.value = key;
+          optConv.innerText = optionText;
+          convSelect.appendChild(optConv);
+        }
+      });
+      
+      // Mantener la selección si todavía existe
+      if (CURRENT_PROMPTS[currentSelected]) {
+        select.value = currentSelected;
+      }
+      if (aiSelect && CURRENT_PROMPTS[currentAiSelected]) {
+        aiSelect.value = currentAiSelected;
+      }
+      if (convSelect && CURRENT_PROMPTS[currentConvSelected]) {
+        convSelect.value = currentConvSelected;
+      }
+    }
+
+    // Modal de vista detallada
+    const modal = document.getElementById('prompt-modal');
+    const btnCloseModal = document.getElementById('btn-close-modal');
+    let currentSelectedPromptId = null;
+
+    function openPromptModal(promptId) {
+      const prompt = CURRENT_PROMPTS[promptId];
+      currentSelectedPromptId = promptId;
+      
+      document.getElementById('modal-prompt-name').innerText = prompt.name;
+      document.getElementById('modal-prompt-version').innerText = `v${prompt.version}`;
+      document.getElementById('modal-prompt-models').innerText = prompt.compatible_models.join(', ') || 'Cualquiera';
+      document.getElementById('modal-prompt-rag').innerText = prompt.rag_context ? "Sí (True)" : "No (False)";
+      document.getElementById('modal-prompt-tax').innerText = prompt.tax;
+      
+      const statusNames = {
+        produccion: "En Producción",
+        revision: "En Revisión",
+        borrador: "Borrador",
+        deprecado: "Deprecado"
+      };
+      const pStatus = prompt.status || 'produccion';
+      document.getElementById('modal-prompt-status').innerText = statusNames[pStatus] || "En Producción";
+      document.getElementById('modal-prompt-desc').innerText = prompt.description || 'Sin descripción';
+      document.getElementById('modal-prompt-text').innerText = prompt.prompt_text;
+      
+      const tagsContainer = document.getElementById('modal-prompt-tags');
+      tagsContainer.innerHTML = '';
+      prompt.tags.forEach(tag => {
+        const span = document.createElement('span');
+        span.className = 'badge badge-primary';
+        span.innerText = tag;
+        tagsContainer.appendChild(span);
+      });
+      
+      modal.classList.add('active');
+    }
+
+    btnCloseModal.addEventListener('click', () => modal.classList.remove('active'));
+    window.addEventListener('click', (e) => {
+      if (e.target === modal) modal.classList.remove('active');
+    });
+
+    document.getElementById('modal-btn-copy').addEventListener('click', () => {
+      if (currentSelectedPromptId) {
+        navigator.clipboard.writeText(CURRENT_PROMPTS[currentSelectedPromptId].prompt_text);
+        alert("Texto del prompt copiado al portapapeles.");
+      }
+    });
+
+    document.getElementById('modal-btn-use').addEventListener('click', () => {
+      if (currentSelectedPromptId) {
+        modal.classList.remove('active');
+        const navPlayground = document.querySelector('[data-tab="playground"]');
+        navPlayground.click();
+        
+        const select = document.getElementById('playground-select-prompt');
+        select.value = currentSelectedPromptId;
+        select.dispatchEvent(new Event('change'));
+      }
+    });
+
+    document.getElementById('modal-btn-activate').addEventListener('click', () => {
+      if (currentSelectedPromptId) {
+        modal.classList.remove('active');
+        activatePrompt(currentSelectedPromptId);
+      }
+    });
+
+    // --- PANEL 2: COMPILADOR LOGIC ---
+    const playgroundSelect = document.getElementById('playground-select-prompt');
+    const playgroundTemplate = document.getElementById('playground-template');
+    const playgroundVarsContainer = document.getElementById('playground-variables-form');
+    const playgroundCompiled = document.getElementById('playground-compiled-preview');
+
+    playgroundSelect.addEventListener('change', () => {
+      const selected = playgroundSelect.value;
+      if (selected && CURRENT_PROMPTS[selected]) {
+        playgroundTemplate.value = CURRENT_PROMPTS[selected].prompt_text;
+      } else if (selected === "") {
+        playgroundTemplate.value = '';
+      }
+      parseVariables();
+    });
+
+    playgroundTemplate.addEventListener('input', parseVariables);
+
+    function parseVariables() {
+      const text = playgroundTemplate.value;
+      const regex = /\{([A-Za-z0-9_]+)\}/g;
+      let match;
+      const vars = new Set();
+      
+      while ((match = regex.exec(text)) !== null) {
+        vars.add(match[1]);
+      }
+      
+      playgroundVarsContainer.innerHTML = '';
+      
+      if (vars.size === 0) {
+        playgroundVarsContainer.innerHTML = `
+          <div style="color: var(--text-muted); font-style: italic; font-size: 0.9rem; text-align: center;">
+            No se han detectado variables. Escribe placeholders como {VARIABLE} en el editor de la izquierda.
+          </div>
+        `;
+        playgroundCompiled.innerText = text || "Aquí aparecerá tu prompt compilado listo para enviar al LLM...";
+        return;
+      }
+      
+      vars.forEach(vName => {
+        const div = document.createElement('div');
+        div.className = 'var-field';
+        div.innerHTML = `
+          <label for="var-input-${vName}">{${vName}}</label>
+          <input type="text" id="var-input-${vName}" data-var="${vName}" placeholder="Ingresa el valor para {${vName}}">
+        `;
+        div.querySelector('input').addEventListener('input', compilePrompt);
+        playgroundVarsContainer.appendChild(div);
+      });
+      
+      compilePrompt();
+    }
+
+    function compilePrompt() {
+      let text = playgroundTemplate.value;
+      const inputs = playgroundVarsContainer.querySelectorAll('input');
+      
+      inputs.forEach(input => {
+        const vName = input.getAttribute('data-var');
+        const val = input.value || `{${vName}}`;
+        const regex = new RegExp(`\\{${vName}\\}`, 'g');
+        text = text.replace(regex, val);
+      });
+      
+      playgroundCompiled.innerText = text;
+    }
+
+    document.getElementById('copy-compiled-btn').addEventListener('click', () => {
+      const text = playgroundCompiled.innerText;
+      if (text) {
+        navigator.clipboard.writeText(text);
+        alert("Prompt compilado copiado al portapapeles.");
+      }
+    });
+
+    // --- PANEL 3: CONVERSOR YAML / JSON LOGIC ---
+    const converterInput = document.getElementById('converter-input');
+    const converterOutput = document.getElementById('converter-output');
+    const btnRunConvert = document.getElementById('btn-run-convert');
+    const btnLoadConverterSample = document.getElementById('btn-load-converter-sample');
+    const converterSelect = document.getElementById('converter-select-prompt');
+
+    if (converterSelect) {
+      converterSelect.addEventListener('change', () => {
+        const val = converterSelect.value;
+        if (val && CURRENT_PROMPTS[val]) {
+          const p = CURRENT_PROMPTS[val];
+          const cmStr = (p.compatible_models || []).map(m => `  - "${m}"`).join('\n') || '  - "Cualquiera"';
+          const vStr = (p.variables || []).map(v => `  - "${v}"`).join('\n') || '  - ""';
+          const tStr = (p.tags || []).map(t => `  - "${t}"`).join('\n') || '  - "general"';
+          
+          const yamlFrontmatter = `---
+name: "${p.name}"
+version: "${p.version}"
+description: "${p.description || ''}"
+compatible_models:
+${cmStr}
+variables:
+${vStr}
+rag_context: ${p.rag_context !== undefined ? p.rag_context : false}
+tags:
+${tStr}
+---
+${p.prompt_text || ''}`;
+          
+          converterInput.value = yamlFrontmatter;
+          converterOutput.value = '';
+          // Pequeño delay para asegurar que el DOM se actualizó antes de compilar
+          setTimeout(() => btnRunConvert.click(), 50);
+        } else if (!val) {
+          converterInput.value = '';
+          converterOutput.value = '';
+        }
+      });
+    }
+
+    btnLoadConverterSample.addEventListener('click', () => {
+      converterInput.value = `---
+name: "Análisis de Sentimiento de Correos B2B"
+version: "1.0.0"
+description: "Clasifica el tono de un correo de cliente y extrae frustraciones."
+compatible_models:
+  - "gpt-4o"
+  - "claude-3-5-sonnet"
+variables:
+  - "correo_cliente"
+  - "puntos_frustracion"
+rag_context: false
+tags:
+  - "soporte"
+  - "sentimiento"
+  - "análisis"
+---
+Analiza el tono emocional del siguiente correo electrónico enviado por un cliente: {correo_cliente}. Clasifica el sentimiento como POSITIVO, NEUTRO o NEGATIVO. Si es negativo, extrae los puntos de frustración principales: {puntos_frustracion}. Devuelve la respuesta en formato JSON.`;
+      converterOutput.value = '';
+    });
+
+    btnRunConvert.addEventListener('click', () => {
+      const content = converterInput.value.trim();
+      const match = content.match(/^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/);
+      
+      if (!match) {
+        converterOutput.value = "❌ ERROR: No se encontró un formato estructurado YAML Frontmatter válido.\nEl archivo debe comenzar con '---', definir propiedades y cerrar con '---' antes del prompt.";
+        return;
+      }
+      
+      const yamlText = match[1];
+      const promptText = match[2].trim();
+      
+      try {
+        const metadata = {};
+        const lines = yamlText.split('\n');
+        let currentKey = null;
+        
+        lines.forEach(line => {
+          const stripped = line.trim();
+          if (!stripped || stripped.startsWith('#')) return;
+          
+          if (stripped.startsWith('-') && currentKey) {
+            const val = stripped.substring(1).trim().replace(/^["']|["']$/g, '');
+            if (!metadata[currentKey]) metadata[currentKey] = [];
+            else if (!Array.isArray(metadata[currentKey])) metadata[currentKey] = [metadata[currentKey]];
+            metadata[currentKey].push(val);
+            return;
+          }
+          
+          if (line.includes(':')) {
+            const idx = line.indexOf(':');
+            const key = line.substring(0, idx).trim();
+            const val = line.substring(idx + 1).trim();
+            
+            if (val.startsWith('[') && val.endsWith(']')) {
+              const items = val.substring(1, val.length - 1).split(',').map(i => i.trim().replace(/^["']|["']$/g, ''));
+              metadata[key] = items;
+              currentKey = key;
+            } else if (!val) {
+              metadata[key] = [];
+              currentKey = key;
+            } else {
+              let parsedVal = val.replace(/^["']|["']$/g, '');
+              if (parsedVal.toLowerCase() === 'true') parsedVal = true;
+              else if (parsedVal.toLowerCase() === 'false') parsedVal = false;
+              else if (!isNaN(parsedVal) && parsedVal !== '') parsedVal = Number(parsedVal);
+              
+              metadata[key] = parsedVal;
+              currentKey = key;
+            }
+          }
+        });
+        
+        metadata['prompt_text'] = promptText;
+        converterOutput.value = JSON.stringify(metadata, null, 2);
+        
+      } catch (err) {
+        converterOutput.value = `❌ ERROR al parsear Frontmatter:\n${err.message}`;
+      }
+    });
+
+    document.getElementById('copy-json-btn').addEventListener('click', () => {
+      const text = converterOutput.value;
+      if (text && !text.startsWith("❌")) {
+        navigator.clipboard.writeText(text);
+        alert("JSON copiado al portapapeles.");
+      }
+    });
+
+    // --- PANEL 4: EXERCISES LOGIC ---
+    const exTabs = document.querySelectorAll('.ex-tab');
+    const exDetails = document.querySelectorAll('.exercise-details');
+
+    exTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const exNum = tab.getAttribute('data-ex');
+        
+        exTabs.forEach(t => t.classList.remove('active'));
+        exDetails.forEach(d => d.classList.remove('active'));
+        
+        tab.classList.add('active');
+        document.getElementById(`ex-details-${exNum}`).classList.add('active');
+      });
+    });
+
+    function validateExercise1() {
+      const tax = document.getElementById('ex1-tax').value.trim().toLowerCase();
+      const name = document.getElementById('ex1-name').value.trim();
+      const models = document.getElementById('ex1-models').value.trim();
+      const vars = document.getElementById('ex1-vars').value.trim().toLowerCase();
+      const rag = document.getElementById('ex1-rag').value;
+      const tags = document.getElementById('ex1-tags').value.trim().toLowerCase();
+      
+      const valBox = document.getElementById('val-box-1');
+      valBox.className = "validation-box";
+      let errors = [];
+      
+      if (!tax.includes('legal/')) {
+        errors.push("La ruta taxonómica debe indicar la vertical 'legal/' (por ejemplo, 'legal/contratos' o 'legal/nda').");
+      }
+      if (name.length < 5) {
+        errors.push("El nombre descriptivo del prompt debe ser más específico y descriptivo (mínimo 5 caracteres).");
+      }
+      const listVars = vars.split(',').map(v => v.trim());
+      if (!listVars.includes('documento_nda') || !listVars.includes('duracion') || !listVars.includes('penalizaciones')) {
+        errors.push("El prompt B requiere exactamente los placeholders: 'documento_nda', 'duracion' y 'penalizaciones'.");
+      }
+      if (rag !== 'true') {
+        errors.push("Al inyectar un documento NDAs externo ({documento_nda}), el prompt REQUIERE recuperación de contexto (RAG = True).");
+      }
+      if (tags.split(',').length < 2) {
+        errors.push("Asigna al menos 2 etiquetas relacionadas al ámbito legal o NDAs.");
+      }
+
+      if (errors.length === 0) {
+        valBox.classList.add('success');
+        valBox.innerHTML = `
+          <div class="validation-title">🎉 ¡Prueba superada con éxito!</div>
+          <div class="validation-item">✓ Clasificación taxonómica adecuada en la vertical Legal.</div>
+          <div class="validation-item">✓ Identificación de placeholders obligatorios del Prompt B ({documento_nda}, {duracion}, {penalizaciones}).</div>
+          <div class="validation-item">✓ Selección correcta del contexto RAG habilitado (true).</div>
+        `;
+      } else {
+        valBox.classList.add('error');
+        valBox.innerHTML = `
+          <div class="validation-title">⚠️ Errores en la Solución del Ejercicio 1:</div>
+          ${errors.map(err => `<div class="validation-item">✗ ${err}</div>`).join('')}
+        `;
+      }
+    }
+
+    function validateExercise2() {
+      const jsonText = document.getElementById('ex2-json').value.trim();
+      const valBox = document.getElementById('val-box-2');
+      valBox.className = "validation-box";
+      
+      if (!jsonText) {
+        valBox.classList.add('error');
+        valBox.innerHTML = '<div class="validation-title">El campo está vacío. Por favor escribe tu solución en JSON.</div>';
+        return;
+      }
+      
+      try {
+        const parsed = JSON.parse(jsonText);
+        let errors = [];
+        const requiredKeys = ["name", "version", "description", "compatible_models", "variables", "rag_context", "tags", "prompt_text"];
+        requiredKeys.forEach(k => {
+          if (!(k in parsed)) {
+            errors.push(`Falta la propiedad obligatoria en el JSON: "${k}"`);
+          }
+        });
+        if (parsed.variables && Array.isArray(parsed.variables)) {
+          if (!parsed.variables.includes("correo_cliente") || !parsed.variables.includes("puntos_frustracion")) {
+            errors.push('La lista de "variables" debe incluir los placeholders del prompt: "correo_cliente" y "puntos_frustracion".');
+          }
+        } else {
+          errors.push('La propiedad "variables" debe ser un Array.');
+        }
+        if (!parsed.tags || !Array.isArray(parsed.tags) || parsed.tags.length === 0) {
+          errors.push('La propiedad "tags" debe ser un Array no vacío.');
+        }
+        if (parsed.prompt_text && !parsed.prompt_text.includes("{correo_cliente}")) {
+          errors.push('El texto de "prompt_text" debe incluir la variable "{correo_cliente}".');
+        }
+        
+        if (errors.length === 0) {
+          valBox.classList.add('success');
+          valBox.innerHTML = `
+            <div class="validation-title">🎉 ¡JSON Válido y Estructurado Correctamente!</div>
+            <div class="validation-item">✓ Formato JSON sintácticamente correcto.</div>
+            <div class="validation-item">✓ Cumple con el estándar de metadatos requerido por Guadián (2025).</div>
+          `;
+        } else {
+          valBox.classList.add('error');
+          valBox.innerHTML = `
+            <div class="validation-title">⚠️ Errores en la Estructura JSON:</div>
+            ${errors.map(err => `<div class="validation-item">✗ ${err}</div>`).join('')}
+          `;
+        }
+      } catch (e) {
+        valBox.classList.add('error');
+        valBox.innerHTML = `
+          <div class="validation-title">❌ Error de Sintaxis JSON:</div>
+          <div class="validation-item">${e.message}</div>
+        `;
+      }
+    }
+
+    function validateExercise3() {
+      const prompt = document.getElementById('ex3-prompt').value.trim();
+      const doc = document.getElementById('ex3-doc').value.trim();
+      const valBox = document.getElementById('val-box-3');
+      valBox.className = "validation-box";
+      let errors = [];
+      
+      if (!prompt.includes('{EMPRESA}')) {
+        errors.push("El prompt debe parametrizar el nombre de la empresa como {EMPRESA}.");
+      }
+      if (!prompt.includes('{PERIODO}') && !prompt.includes('{TRIMESTRE}') && !prompt.includes('{Q}')) {
+        errors.push("El prompt debe parametrizar el periodo analizado (ej: {PERIODO}).");
+      }
+      if (doc.length < 15) {
+        errors.push("Debes detallar la documentación de las variables.");
+      }
+      
+      if (errors.length === 0) {
+        valBox.classList.add('success');
+        valBox.innerHTML = `
+          <div class="validation-title">🎉 ¡Diseño de Plantilla Estandarizado!</div>
+          <div class="validation-item">✓ Se normalizaron los marcadores de posición en mayúsculas.</div>
+        `;
+      } else {
+        valBox.classList.add('error');
+        valBox.innerHTML = `
+          <div class="validation-title">⚠️ Faltas en el Ejercicio 3:</div>
+          ${errors.map(err => `<div class="validation-item">✗ ${err}</div>`).join('')}
+        `;
+      }
+    }
+
+    function validateExercise4() {
+      const prompt = document.getElementById('ex4-orchestrator').value.trim();
+      const valBox = document.getElementById('val-box-4');
+      valBox.className = "validation-box";
+      let errors = [];
+      
+      if (prompt.length < 50) {
+        errors.push("El prompt orquestador de expertos es muy corto.");
+      }
+      const promptLower = prompt.toLowerCase();
+      if (!promptLower.includes("abogado") && !promptLower.includes("sec") && !promptLower.includes("regulación")) {
+        errors.push("El prompt debe detallar el rol del experto en Regulación de Valores.");
+      }
+      if (!promptLower.includes("forense") && !promptLower.includes("texto")) {
+        errors.push("El prompt debe detallar el rol del experto en Análisis Forense.");
+      }
+      if (!promptLower.includes("analista") && !promptLower.includes("financiero")) {
+        errors.push("El prompt debe detallar el rol del Analista Financiero Senior.");
+      }
+      if (!promptLower.includes("debate") && !promptLower.includes("consenso") && !promptLower.includes("consolidar")) {
+        errors.push("El prompt debe especificar una etapa de debate o consenso final.");
+      }
+
+      if (errors.length === 0) {
+        valBox.classList.add('success');
+        valBox.innerHTML = `
+          <div class="validation-title">🎉 ¡Estructura de Orquestador Aprobada!</div>
+          <div class="validation-item">✓ Inicializa a los 3 expertos virtuales con sus respectivos enfoques.</div>
+        `;
+      } else {
+        valBox.classList.add('error');
+        valBox.innerHTML = `
+          <div class="validation-title">⚠️ Faltas en el Orquestador:</div>
+          ${errors.map(err => `<div class="validation-item">✗ ${err}</div>`).join('')}
+        `;
+      }
+    }
+
+    function validateExercise5() {
+      const version = document.getElementById('ex5-version').value.trim();
+      const changelog = document.getElementById('ex5-changelog').value.trim().toLowerCase();
+      const valBox = document.getElementById('val-box-5');
+      valBox.className = "validation-box";
+      let errors = [];
+      
+      if (version !== "1.1.0" && version !== "1.1") {
+        errors.push("La versión debe seguir el formato semántico '1.1.0' para indicar una adición menor de variables.");
+      }
+      if (!changelog.includes("tipo_de_cambio") && !changelog.includes("variable") && !changelog.includes("cambio")) {
+        errors.push("El changelog debe mencionar la adición de '{TIPO_DE_CAMBIO}'.");
+      }
+      
+      if (errors.length === 0) {
+        valBox.classList.add('success');
+        valBox.innerHTML = `
+          <div class="validation-title">🎉 ¡Flujo de Gobernanza Correcto!</div>
+          <div class="validation-item">✓ Versionado semántico asignado correctamente (v1.1.0).</div>
+        `;
+      } else {
+        valBox.classList.add('error');
+        valBox.innerHTML = `
+          <div class="validation-title">⚠️ Correcciones de Gobernanza:</div>
+          ${errors.map(err => `<div class="validation-item">✗ ${err}</div>`).join('')}
+        `;
+      }
+    }
+
+    // --- PANEL 5: METAPROMPT BUILDER LOGIC ---
+    const metaTask = document.getElementById('meta-task');
+    const metaExpert = document.getElementById('meta-expert');
+    const metaInputs = document.getElementById('meta-inputs');
+    const metaOutput = document.getElementById('meta-output');
+    const metaResult = document.getElementById('meta-prompt-result');
+
+    function buildMetaPrompt() {
+      const task = metaTask.value.trim() || "[Tarea]";
+      const expert = metaExpert.value.trim() || "[Experto]";
+      const inputs = metaInputs.value.trim() || "[Variables]";
+      const outputType = metaOutput.value;
+      
+      const varArray = inputs.split(',').map(v => v.trim()).filter(v => v !== '');
+      const placeholdersList = varArray.map(v => `{${v.toUpperCase()}}`).join(', ');
+      const detailedVars = varArray.map(v => `* {${v.toUpperCase()}}: [Describir datos esperados para ${v}]`).join('\n');
+
+      const metaTemplate = `Eres un Ingeniero de Prompts de Inteligencia Artificial de Nivel Élite. Tu tarea es diseñar un Prompt de Sistema altamente sofisticado, optimizado y robusto que permita a un LLM resolver de forma consistente la siguiente tarea:
+
+> **TAREA A RESOLVER**: ${task}
+
+El prompt final que construyas debe guiar al modelo para actuar como un:
+**ROL DE EXPERTO**: ${expert}
+
+### Estructura Requerida del Prompt Final:
+El prompt final que diseñes debe contener exactamente estas secciones estructuradas:
+1. **Rol y Objetivo**: Explicación del rol del experto y su misión.
+2. **Contexto Operativo**: Reglas de negocio y lógica que el modelo debe seguir.
+3. **Variables de Entrada**: Indicarle al modelo que recibirá las siguientes variables: ${placeholdersList}.
+4. **Instrucciones Paso a Paso (Razonamiento)**: Pasos lógicos obligatorios antes de dar la respuesta.
+5. **Formato de Salida Obligatorio**: Indicar que la salida debe devolverse estrictamente como ${outputType}
+
+### Documentación de Variables del Prompt Final:
+${detailedVars}
+
+Por favor, diseña el prompt final e inclúyelo en un bloque de código Markdown para que sea fácil de copiar. Agrega una sección final con consejos operativos para testear la plantilla.`;
+
+      metaResult.innerText = metaTemplate;
+    }
+
+    metaTask.addEventListener('input', buildMetaPrompt);
+    metaExpert.addEventListener('input', buildMetaPrompt);
+    metaInputs.addEventListener('input', buildMetaPrompt);
+    metaOutput.addEventListener('change', buildMetaPrompt);
+
+    document.getElementById('copy-meta-btn').addEventListener('click', () => {
+      navigator.clipboard.writeText(metaResult.innerText);
+      alert("Meta-prompt copiado al portapapeles.");
+    });
+
+    // --- PANEL 6: SYSTEM EXPERT LOGIC ---
+    const expertFieldSelect = document.getElementById('expert-field-select');
+    const expertExplanationBox = document.getElementById('expert-explanation-box');
+
+    const EXPERT_KNOWLEDGE_BASE = {
+      ex1_tax: {
+        title: "Ejercicio 1: Ruta Taxonómica",
+        type: "Cadena de texto estructurada (Ruta de directorios)",
+        example: "<code>legal/contratos</code> o <code>recursos_humanos/reclutamiento</code>",
+        why: "La taxonomía organiza tus prompts por áreas de negocio y subtemas verticales. Al usar rutas estructuradas en minúsculas y sin espacios, permites que los scripts automáticos e interfaces web los cataloguen y agrupen jerárquicamente en directorios físicos.",
+        action: "Ingresa una ruta corta separada por barras, representando la carpeta contenedora ideal para el prompt legal analizado."
+      },
+      ex1_vars: {
+        title: "Ejercicio 1: Variables Identificadas",
+        type: "Lista de variables separadas por comas",
+        example: "<code>documento_nda, duracion, penalizaciones</code>",
+        why: "Identificar los placeholders del prompt es fundamental para saber qué datos debe recolectar la interfaz. Cada placeholder debe corresponder exactamente con los textos entre llaves del prompt inicial.",
+        action: "Escribe las tres variables exactas del Prompt B para pasar la validación."
+      },
+      ex1_rag: {
+        title: "Ejercicio 1: Selección de RAG",
+        type: "Booleano lógico (true o false)",
+        example: "<code>true</code> (Sí)",
+        why: "Un prompt requiere recuperación de contexto (RAG) si debe procesar un documento o archivo específico y no genérico (en este caso, un contrato de confidencialidad NDA). RAG inyecta el fragmento de texto correspondiente al prompt antes de enviarlo al modelo.",
+        action: "Selecciona 'Sí (RAG True)' del selector ya que el prompt analiza un archivo NDA externo."
+      },
+      ex2_json: {
+        title: "Ejercicio 2: Estructura JSON",
+        type: "Código JSON sintácticamente válido",
+        example: '<code>{\n  "name": "Ejemplo",\n  "version": "1.0.0",\n  "prompt_text": "Texto con {variable}"\n}</code>',
+        why: "JSON es la contraparte legible por máquina del doble formato. La interfaz o el backend del software parsea este JSON para recuperar los metadatos y el texto estructurado del prompt sin tener que analizar archivos de texto libre.",
+        action: "Asegúrate de incluir las 8 propiedades obligatorias: <code>name</code>, <code>version</code>, <code>description</code>, <code>compatible_models</code>, <code>variables</code>, <code>rag_context</code>, <code>tags</code> y <code>prompt_text</code>."
+      },
+      ex3_prompt: {
+        title: "Ejercicio 3: Plantilla Parametrizada",
+        type: "Texto de prompt con marcadores de posición",
+        example: '"Quiero que analices el balance de <code>{EMPRESA}</code> del periodo <code>{PERIODO}</code>..."',
+        why: "El uso de placeholders normalizados en mayúsculas dentro de llaves (ej: <code>{EMPRESA}</code>) independiza la lógica de los datos de entrada, permitiendo reutilizar el prompt indefinidamente.",
+        action: "Reescribe el prompt financiero reemplazando los valores fijos por los placeholders correspondientes en mayúsculas."
+      },
+      ex3_doc: {
+        title: "Ejercicio 3: Documentación de Variables",
+        type: "Texto explicativo detallado",
+        example: "<code>EMPRESA: Cadena de texto. Nombre de la empresa a auditar.</code>",
+        why: "Documentar las variables es crucial para evitar errores tipográficos y de lógica. Si no especificamos el tipo de dato y el rango de valores, los usuarios inyectarán datos inconsistentes y arruinarán la respuesta del LLM.",
+        action: "Escribe al menos dos variables en mayúsculas seguidas de su tipo y descripción detallada."
+      },
+      ex4_orchestrator: {
+        title: "Ejercicio 4: Prompt Orquestador",
+        type: "Prompt avanzado de rol director y simulación",
+        example: '"Actúa como Director. Asigna a 3 expertos virtuales (Financiero, SEC, Forense)..."',
+        why: "La orquestación de expertos en un solo prompt reduce el sesgo del LLM y mitiga alucinaciones. Al simular enfoques especializados y un posterior consenso, el modelo actúa de forma mucho más crítica ante tareas complejas.",
+        action: "Escribe el prompt definiendo explícitamente al Analista Financiero, al Abogado SEC, al Experto Forense de texto, y al proceso de debate final."
+      },
+      ex5_version: {
+        title: "Ejercicio 5: Versionado Semántico (SemVer)",
+        type: "Notación SemVer (X.Y.Z)",
+        example: "<code>1.1.0</code> (Incremento Menor)",
+        why: "El versionado semántico es crucial. Un cambio en las variables obligatorias de entrada es un cambio menor (afecta la compatibilidad de uso pero no el objetivo de negocio). Por tanto, la versión inicial <code>1.0.0</code> debe incrementarse a <code>1.1.0</code>.",
+        action: "Escribe exactamente la versión <code>1.1.0</code> o <code>1.1</code> para que la prueba de gobernanza valide con éxito."
+      },
+      ex5_changelog: {
+        title: "Ejercicio 5: Changelog de Cambios",
+        type: "Descripción técnica de cambios realizados",
+        example: '"Agregada la variable {TIPO_DE_CAMBIO} y ajustada la compatibilidad con Claude 3.5 Sonnet..."',
+        why: "El Changelog mantiene el histórico de por qué evolucionó una instrucción. Evita que los equipos utilicen accidentalmente versiones obsoletas que ya no son compatibles con los nuevos modelos de lenguaje.",
+        action: "Escribe un registro de cambios detallando la variable agregada y los modelos soportados."
+      },
+      play_template: {
+        title: "Playground: Plantilla Base",
+        type: "Texto libre con marcadores de posición",
+        example: '"Eres un tutor para <code>{materia}</code>. Responde la duda <code>{pregunta}</code>..."',
+        why: "El compilador del playground busca coincidencias usando la expresión regular <code>/\\{([A-Za-z0-9_]+)\\}/g</code>. Cada coincidencia genera un campo de entrada dinámico en el formulario de la derecha.",
+        action: "Escribe o pega cualquier texto que contenga palabras entre llaves para ver cómo se crean los campos en tiempo real."
+      },
+      conv_yaml: {
+        title: "Conversor: YAML Frontmatter",
+        type: "Texto estructurado YAML enmarcado en Markdown",
+        example: '<code>---\nname: \"Ejemplo\"\nversion: \"1.0.0\"\n---\nPrompt aquí...</code>',
+        why: "El compilador busca los separadores <code>---</code> al inicio del archivo para segmentar los metadatos YAML. La función JavaScript o el script de Python lee esta información, la mapea y construye un archivo JSON.",
+        action: "Usa el botón 'Cargar Ejemplo' para inspeccionar la estructura y luego haz clic en 'Compilar a JSON'."
+      },
+      db_hybrid: {
+        title: "Persistencia: Modo Híbrido (SQLite / LocalStorage)",
+        type: "Conexión automática a base de datos local",
+        example: "<code>Conectado a SQLite Local</code> vs <code>Offline - Almacenamiento Local</code>",
+        why: "El sistema intenta conectarse a la API REST del servidor Python (puerto 8000) para guardar los prompts en SQLite (base de datos relacional). Si el servidor está apagado, conmuta al almacenamiento local del navegador (localStorage) para que el alumno pueda seguir trabajando sin trabas.",
+        action: "Inicia el servidor local corriendo <code>python server.py</code> y recarga el sitio para sincronizar los datos con la base de datos SQLite."
+      },
+      cat_search: {
+        title: "Buscador: Filtrado por Texto y Tags",
+        type: "Búsqueda en tiempo real por texto y filtros dinámicos por etiquetas",
+        example: "Escribir <code>marketing</code> o hacer clic en el badge de etiqueta <code>soporte</code>",
+        why: "En una librería real de prompts de empresa, buscar rápidamente y filtrar por categorías es crucial. El buscador permite filtrar instantáneamente por título, taxonomía, variables, descripción o etiquetas configuradas.",
+        action: "Prueba a hacer clic en los badges de etiquetas dinámicas en el catálogo para filtrar instantáneamente, o usa la barra de búsqueda."
+      },
+      flow_evolve: {
+        title: "Evolución: Ciclo de Vida SemVer Automático",
+        type: "Acción de versión ('patch', 'minor', 'major') y registro de cambios",
+        example: "Tipo: <code>minor</code>, Changelog: <code>Agregada variable {idioma}</code> &rarr; Actualiza 1.0.0 a 1.1.0",
+        why: "Permite avanzar un prompt y registrar su evolución formalmente en la base de datos SQLite y local. Al evolucionar, el sistema crea un nuevo registro conservando intactas las versiones anteriores, lo cual preserva el historial de versiones para que coexistan simultáneamente y se pueda auditar, revertir o usar múltiples versiones activas en producción según sea necesario.",
+        action: "Carga un prompt en el playground, haz modificaciones en su texto, presiona 'Evolucionar Prompt', completa el tipo de cambio y changelog y haz clic en Guardar."
+      },
+      edit_status: {
+        title: "Edición Directa y Estados de Gobernanza",
+        type: "Actualización de prompt existente y estados del ciclo de vida",
+        example: "Cambiar estado de <code>Borrador</code> a <code>En Producción</code> o viceversa",
+        why: "Permite corregir erratas o ajustar detalles de una instrucción sin incrementar la versión en SemVer. El campo 'Estado del Prompt' indica la fase operativa del prompt ('En Producción', 'En Revisión', 'Borrador', 'Deprecado') para asegurar que los operadores de IA no utilicen plantillas obsoletas o inestables.",
+        action: "Abre el catálogo, haz clic en un prompt, presiona 'Editar', realiza los cambios, ajusta su estado en el selector y guarda los cambios directamente."
+      },
+      ai_evaluator: {
+        title: "Evaluador IA, Proveedores y Ollama",
+        type: "Llamada directa a APIs externas e integración de Ollama local",
+        example: "API Key de Gemini o OpenAI configurada, o Ollama en localhost con puerto 11434",
+        why: "Permite delegar la auditoría y mejora del prompt a un modelo experto. El sistema inyecta una rúbrica estructurada avanzada por medio de un prompt de sistema, y detecta automáticamente los modelos instalados en tu Ollama local para facilitar la orquestación libre en tu propia PC.",
+        action: "Configura tus claves o URL de Ollama, presiona el botón 'Cargar' para listar modelos, escribe tu prompt, presiona 'Evaluar' y luego usa 'Probar en Playground' o 'Evolucionar Versión' para incorporar el resultado."
+      },
+      gpl_license: {
+        title: "Licencia de Código Abierto (GNU GPL v3)",
+        type: "Licencia Pública General GNU versión 3",
+        example: "Autoría y derechos reservados a nombre de <code>Gabriel Sessa (2026)</code>",
+        why: "Garantiza que esta aplicación y sus derivados permanezcan como software libre y gratuito. Protege los derechos de autoría de Gabriel Sessa mientras permite que cualquier usuario o estudiante modifique, distribuya y estudie el código fuente sin costo.",
+        action: "Haz clic en el enlace 'GNU GPL v3' en el pie de página lateral o abre el archivo 'LICENSE' en la raíz del proyecto para leer los términos completos."
+      }
+    };
+
+    expertFieldSelect.addEventListener('change', () => {
+      const selected = expertFieldSelect.value;
+      if (selected && EXPERT_KNOWLEDGE_BASE[selected]) {
+        const item = EXPERT_KNOWLEDGE_BASE[selected];
+        expertExplanationBox.style.textAlign = 'left';
+        expertExplanationBox.style.display = 'block';
+        expertExplanationBox.innerHTML = `
+          <h4 style="color: white; margin-bottom: 0.75rem; font-size: 1.1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">
+            ${item.title}
+          </h4>
+          <p style="margin-bottom: 0.75rem;"><strong style="color: var(--primary);">Tipo de Dato Esperado:</strong> ${item.type}</p>
+          <p style="margin-bottom: 0.75rem;"><strong style="color: var(--success);">Ejemplo de Entrada:</strong> ${item.example}</p>
+          <p style="margin-bottom: 0.75rem;"><strong style="color: white;">¿Por qué es importante?:</strong> ${item.why}</p>
+          <p style="background: rgba(99,102,241,0.05); padding: 0.5rem; border-left: 3px solid var(--primary); font-size: 0.85rem;"><strong style="color: white;">Instrucción de Resolución:</strong> ${item.action}</p>
+        `;
+      } else {
+        expertExplanationBox.style.textAlign = 'center';
+        expertExplanationBox.innerHTML = 'Selecciona una opción a la izquierda para desplegar el análisis del sistema experto.';
+      }
+    });
+
+    // Hook up Edit button from view modal
+    document.getElementById('modal-btn-edit').addEventListener('click', () => {
+      if (currentSelectedPromptId) {
+        modal.classList.remove('active');
+        openEditPromptModal(currentSelectedPromptId);
+      }
+    });
+
+    // --- EDIT PROMPT MODAL LOGIC ---
+    function openEditPromptModal(promptId) {
+      const prompt = CURRENT_PROMPTS[promptId];
+      if (!prompt) return;
+      
+      document.getElementById('edit-p-id').value = promptId; // Almacenamos key id@version en el campo ID de lectura
+      document.getElementById('edit-p-name').value = prompt.name;
+      document.getElementById('edit-p-tax').value = prompt.tax || 'general';
+      document.getElementById('edit-p-rag').value = prompt.rag_context ? 'true' : 'false';
+      document.getElementById('edit-p-status').value = prompt.status || 'produccion';
+      document.getElementById('edit-p-models').value = (prompt.compatible_models || []).join(', ');
+      document.getElementById('edit-p-vars').value = (prompt.variables || []).join(', ');
+      document.getElementById('edit-p-tags').value = (prompt.tags || []).join(', ');
+      document.getElementById('edit-p-desc').value = prompt.description || '';
+      document.getElementById('edit-p-text').value = prompt.prompt_text || '';
+      
+      document.getElementById('edit-prompt-modal').classList.add('active');
+    }
+
+    const btnCloseEditPrompt = document.getElementById('btn-close-edit-prompt');
+    const btnCancelEditPrompt = document.getElementById('btn-cancel-edit-prompt');
+    const btnSaveEditPrompt = document.getElementById('btn-save-edit-prompt');
+
+    if (btnCloseEditPrompt) {
+      btnCloseEditPrompt.addEventListener('click', () => {
+        document.getElementById('edit-prompt-modal').classList.remove('active');
+      });
+    }
+    if (btnCancelEditPrompt) {
+      btnCancelEditPrompt.addEventListener('click', () => {
+        document.getElementById('edit-prompt-modal').classList.remove('active');
+      });
+    }
+
+    if (btnSaveEditPrompt) {
+      btnSaveEditPrompt.addEventListener('click', async () => {
+        const promptKey = document.getElementById('edit-p-id').value;
+        const [id, version] = promptKey.split('@');
+        const name = document.getElementById('edit-p-name').value.trim();
+        const tax = document.getElementById('edit-p-tax').value.trim();
+        const rag = document.getElementById('edit-p-rag').value === 'true';
+        const status = document.getElementById('edit-p-status').value;
+        const models = document.getElementById('edit-p-models').value.split(',').map(m => m.trim()).filter(m => m !== '');
+        const variables = document.getElementById('edit-p-vars').value.split(',').map(v => v.trim()).filter(v => v !== '');
+        const tags = document.getElementById('edit-p-tags').value.split(',').map(t => t.trim()).filter(t => t !== '');
+        const desc = document.getElementById('edit-p-desc').value.trim();
+        const text = document.getElementById('edit-p-text').value.trim();
+
+        if (!name || !text) {
+          alert("Por favor completa los campos obligatorios: Nombre e Instrucción del prompt.");
+          return;
+        }
+
+        const editedPromptObj = {
+          id,
+          name,
+          version: version || "1.0.0",
+          description: desc,
+          compatible_models: models,
+          variables,
+          rag_context: rag,
+          tax: tax || "general",
+          tags,
+          prompt_text: text,
+          status,
+          yaml_frontmatter: `name: "${name}"\nversion: "${version || "1.0.0"}"\ndescription: "${desc}"\ncompatible_models:\n${models.map(m => `  - "${m}"`).join('\n')}\nvariables:\n${variables.map(v => `  - "${v}"`).join('\n')}\nrag_context: ${rag}\ntags:\n${tags.map(t => `  - "${t}"`).join('\n')}`
+        };
+
+        const success = await savePrompt(editedPromptObj);
+        if (success) {
+          document.getElementById('edit-prompt-modal').classList.remove('active');
+          alert(`¡Prompt '${name}' actualizado con éxito!`);
+          
+          if (activePrompt && activePrompt.id === id && activePrompt.version === version) {
+            activePrompt = editedPromptObj;
+            syncActivePromptBanner();
+          }
+        }
+      });
+    }
+
+    // --- AI EVALUATOR LOGIC ---
+    const DEFAULT_AI_SYSTEM_PROMPT = `Eres un Ingeniero de Prompts de Inteligencia Artificial de Nivel Élite, un experto docente de la Fundación Santísima Trinidad y FormaTEC. Tu tarea es auditar y mejorar el prompt que provee el usuario aplicando las mejores prácticas de la industria.
+
+### Criterios de Evaluación y Mejora:
+1. **Roles y Contexto**: Asegúrate de que el prompt inicie definiendo un rol claro (ej: "Eres un analista de marketing senior experto en...").
+2. **Estructura Modular (XML)**: Separa las secciones lógicas del prompt utilizando etiquetas XML (ej: <instructions>, <context>, <rules>, <output_format>).
+3. **Placeholders Normalizados**: Todo parámetro variable debe estar encerrado en llaves y en mayúsculas (ej: {PRODUCTO}, {FECHA}, {CONTENIDO}).
+4. **Instrucciones Claras y Paso a Paso**: Utiliza razonamiento en cadena (Chain of Thought), pidiendo al modelo pensar paso a paso o estructurar su análisis.
+5. **Mitigación de Alucinaciones y Reglas Negativas**: Instruye al modelo qué NO hacer (ej: "Si no tienes información suficiente, responde 'No tengo datos suficientes' en lugar de inventar").
+6. **Formato de Salida**: Especifica claramente cómo debe estructurarse la respuesta (Markdown, JSON, Tabla, etc.).
+
+### Formato de tu Respuesta (Obligatorio):
+Debes responder estructurando tu salida exactamente en dos partes:
+
+Parte 1: DIAGNÓSTICO CRÍTICO
+Proporciona una crítica constructiva detallada del prompt original en español, indicando fortalezas y debilidades según los criterios anteriores.
+
+Parte 2: PROMPT MEJORADO
+Escribe la versión mejorada del prompt completa y lista para ser usada. Debes envolver el texto completo del prompt mejorado dentro de las etiquetas XML <improved_prompt> y </improved_prompt>. No incluyas explicaciones dentro de estas etiquetas, solo el prompt optimizado.
+
+Ejemplo de estructura de respuesta:
+---
+### Diagnóstico Crítico:
+1. **Roles**: El prompt carece de rol...
+2. **Variables**: Los placeholders están en minúsculas...
+
+### Prompt Optimizado:
+<improved_prompt>
+Eres un redactor experto en redes sociales. Tu tarea es...
+</improved_prompt>
+---`;
+
+    function toggleAiProviderSettings() {
+      const provider = document.getElementById('ai-provider').value;
+      document.querySelectorAll('.provider-settings').forEach(el => el.style.display = 'none');
+      document.getElementById(`settings-${provider}`).style.display = 'block';
+    }
+
+    function toggleKeyVisibility(id) {
+      const input = document.getElementById(id);
+      if (input.type === 'password') {
+        input.type = 'text';
+      } else {
+        input.type = 'password';
+      }
+    }
+
+    function saveAiConfig() {
+      const provider = document.getElementById('ai-provider').value;
+      const config = {
+        provider,
+        geminiKey: document.getElementById('gemini-key').value,
+        geminiModel: document.getElementById('gemini-model').value,
+        openaiKey: document.getElementById('openai-key').value,
+        openaiModel: document.getElementById('openai-model').value,
+        ollamaUrl: document.getElementById('ollama-url').value,
+        ollamaModel: document.getElementById('ollama-model').value,
+        systemPrompt: document.getElementById('ai-system-prompt').value
+      };
+      
+      localStorage.setItem('prompt_ai_evaluator_config', JSON.stringify(config));
+      alert("¡Configuración de IA guardada con éxito!");
+    }
+
+    function loadAiConfig() {
+      const raw = localStorage.getItem('prompt_ai_evaluator_config');
+      if (raw) {
+        try {
+          const config = JSON.parse(raw);
+          if (config.provider) document.getElementById('ai-provider').value = config.provider;
+          if (config.geminiKey) document.getElementById('gemini-key').value = config.geminiKey;
+          if (config.geminiModel) document.getElementById('gemini-model').value = config.geminiModel;
+          if (config.openaiKey) document.getElementById('openai-key').value = config.openaiKey;
+          if (config.openaiModel) document.getElementById('openai-model').value = config.openaiModel;
+          if (config.ollamaUrl) document.getElementById('ollama-url').value = config.ollamaUrl;
+          
+          if (config.ollamaModel) {
+            const select = document.getElementById('ollama-model');
+            const exists = Array.from(select.options).some(opt => opt.value === config.ollamaModel);
+            if (!exists) {
+              const opt = document.createElement('option');
+              opt.value = config.ollamaModel;
+              opt.innerText = config.ollamaModel;
+              select.appendChild(opt);
+            }
+            select.value = config.ollamaModel;
+          }
+          
+          if (config.systemPrompt) {
+            document.getElementById('ai-system-prompt').value = config.systemPrompt;
+          } else {
+            document.getElementById('ai-system-prompt').value = DEFAULT_AI_SYSTEM_PROMPT;
+          }
+        } catch (e) {
+          console.error("Error al cargar config de IA", e);
+          document.getElementById('ai-system-prompt').value = DEFAULT_AI_SYSTEM_PROMPT;
+        }
+      } else {
+        document.getElementById('ai-system-prompt').value = DEFAULT_AI_SYSTEM_PROMPT;
+      }
+      toggleAiProviderSettings();
+    }
+
+    async function fetchOllamaModels() {
+      const baseUrl = document.getElementById('ollama-url').value.trim();
+      const select = document.getElementById('ollama-model');
+      if (!baseUrl) {
+        alert("Por favor introduce la URL base de Ollama (ej: http://localhost:11434).");
+        return;
+      }
+      
+      const prevVal = select.value;
+      select.innerHTML = '<option value="">Cargando modelos...</option>';
+      
+      try {
+        const response = await fetch(`${baseUrl}/api/tags`);
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+        
+        const data = await response.json();
+        if (data.models && Array.isArray(data.models) && data.models.length > 0) {
+          select.innerHTML = '';
+          data.models.forEach(model => {
+            const opt = document.createElement('option');
+            opt.value = model.name;
+            opt.innerText = model.name;
+            select.appendChild(opt);
+          });
+          
+          const hasPrevVal = Array.from(select.options).some(opt => opt.value === prevVal);
+          if (hasPrevVal) {
+            select.value = prevVal;
+          }
+          alert(`¡Se detectaron ${data.models.length} modelo(s) en Ollama!`);
+        } else {
+          select.innerHTML = '<option value="llama3">llama3</option>';
+          alert("Ollama respondió con éxito, pero no se encontraron modelos instalados. Puedes descargar uno corriendo 'ollama run llama3'.");
+        }
+      } catch (err) {
+        console.error(err);
+        select.innerHTML = '';
+        
+        const defaults = ["llama3", "llama3:latest", "mistral", "gemma"];
+        defaults.forEach(d => {
+          const opt = document.createElement('option');
+          opt.value = d;
+          opt.innerText = d;
+          select.appendChild(opt);
+        });
+        select.value = prevVal || "llama3";
+        
+        alert(`No se pudo conectar a Ollama en ${baseUrl}.\n\nDetalles del error: ${err.message}\n\nAsegúrate de que Ollama esté corriendo y de iniciar el servidor habilitando CORS:\nset OLLAMA_ORIGINS=* && ollama serve`);
+      }
+    }
+
+    function resetAiSystemPrompt() {
+      if (confirm("¿Estás seguro de restablecer el System Prompt al valor predeterminado de la clase?")) {
+        document.getElementById('ai-system-prompt').value = DEFAULT_AI_SYSTEM_PROMPT;
+      }
+    }
+
+    function loadPromptIntoAiEvaluator() {
+      const select = document.getElementById('ai-select-prompt');
+      const val = select ? select.value : '';
+      if (val && CURRENT_PROMPTS[val]) {
+        document.getElementById('ai-prompt-input').value = CURRENT_PROMPTS[val].prompt_text || '';
+      } else if (!val) {
+        document.getElementById('ai-prompt-input').value = '';
+      }
+    }
+
+    function switchAiResultTab(tab) {
+      const tabCritique = document.getElementById('tab-btn-ai-critique');
+      const tabImproved = document.getElementById('tab-btn-ai-improved');
+      const contentCritique = document.getElementById('ai-result-critique');
+      const contentImproved = document.getElementById('ai-result-improved');
+
+      if (tab === 'critique') {
+        tabCritique.classList.add('active');
+        tabImproved.classList.remove('active');
+        contentCritique.style.display = 'block';
+        contentImproved.style.display = 'none';
+      } else {
+        tabCritique.classList.remove('active');
+        tabImproved.classList.add('active');
+        contentCritique.style.display = 'none';
+        contentImproved.style.display = 'flex';
+      }
+    }
+
+    function sendAiImprovedToPlayground() {
+      const text = document.getElementById('ai-improved-text').value;
+      if (!text) return;
+      
+      // Ir a la pestaña playground
+      const navItem = document.querySelector('[data-tab="playground"]');
+      if (navItem) navItem.click();
+      
+      document.getElementById('playground-select-prompt').value = "";
+      document.getElementById('playground-template').value = text;
+      parseVariables();
+      alert("¡Prompt optimizado cargado en el Playground de variables!");
+    }
+
+    function openEvolveModalFromAi() {
+      const text = document.getElementById('ai-improved-text').value;
+      if (!text) {
+        alert("No hay ningún prompt optimizado por la IA para evolucionar. Por favor evalúa un prompt primero.");
+        return;
+      }
+      
+      // Intentar auto-activar el prompt original seleccionado en el Evaluador de IA
+      const aiSelect = document.getElementById('ai-select-prompt');
+      const selectedId = aiSelect ? aiSelect.value : '';
+      
+      if (selectedId) {
+        if (!activePrompt || (activePrompt.id + "@" + activePrompt.version) !== selectedId) {
+          activatePrompt(selectedId);
+        }
+      }
+      
+      if (!activePrompt) {
+        alert("Primero debes seleccionar un prompt del catálogo en el selector del Evaluador IA (o activar uno en el catálogo global) para poder evolucionarlo.");
+        return;
+      }
+      
+      // Pre-poblar el modal de evolución
+      openEvolveModal();
+      document.getElementById('evolve-source-content').value = 'ai-improved';
+    }
+
+    function copyAiImprovedText() {
+      const text = document.getElementById('ai-improved-text').value;
+      if (text) {
+        navigator.clipboard.writeText(text);
+        alert("Prompt optimizado copiado al portapapeles.");
+      }
+    }
+
+    async function runAiEvaluation() {
+      const userPrompt = document.getElementById('ai-prompt-input').value.trim();
+      const systemPrompt = document.getElementById('ai-system-prompt').value.trim();
+      const provider = document.getElementById('ai-provider').value;
+      const statusEl = document.getElementById('ai-evaluation-status');
+      const btn = document.getElementById('btn-ai-evaluate');
+
+      if (!userPrompt) {
+        alert("Por favor escribe o selecciona un prompt para evaluar.");
+        return;
+      }
+
+      statusEl.innerText = "Conectando con la IA...";
+      btn.disabled = true;
+      
+      try {
+        let responseText = "";
+        
+        if (provider === 'gemini') {
+          const apiKey = document.getElementById('gemini-key').value.trim();
+          const model = document.getElementById('gemini-model').value;
+          if (!apiKey) {
+            throw new Error("Falta la API Key de Google Gemini.");
+          }
+          
+          const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+          const response = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              contents: [
+                {
+                  role: "user",
+                  parts: [
+                    { text: `System Instruction:\n${systemPrompt}\n\nPor favor, evalúa y optimiza el siguiente prompt:\n\n${userPrompt}` }
+                  ]
+                }
+              ]
+            })
+          });
+          
+          if (!response.ok) {
+            const errData = await response.json().catch(() => ({}));
+            throw new Error(errData.error?.message || `HTTP ${response.status}`);
+          }
+          
+          const data = await response.json();
+          responseText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (!responseText) {
+            throw new Error("Respuesta vacía de la API de Gemini.");
+          }
+          
+        } else if (provider === 'openai') {
+          const apiKey = document.getElementById('openai-key').value.trim();
+          const model = document.getElementById('openai-model').value;
+          if (!apiKey) {
+            throw new Error("Falta la API Key de OpenAI.");
+          }
+          
+          const url = `https://api.openai.com/v1/chat/completions`;
+          const response = await fetch(url, {
+            method: 'POST',
+            headers: { 
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${apiKey}`
+            },
+            body: JSON.stringify({
+              model,
+              messages: [
+                { role: "system", content: systemPrompt },
+                { role: "user", content: `Por favor, evalúa y optimiza el siguiente prompt:\n\n${userPrompt}` }
+              ]
+            })
+          });
+          
+          if (!response.ok) {
+            const errData = await response.json().catch(() => ({}));
+            throw new Error(errData.error?.message || `HTTP ${response.status}`);
+          }
+          
+          const data = await response.json();
+          responseText = data.choices?.[0]?.message?.content;
+          if (!responseText) {
+            throw new Error("Respuesta vacía de la API de OpenAI.");
+          }
+          
+        } else if (provider === 'ollama') {
+          const baseUrl = document.getElementById('ollama-url').value.trim();
+          const model = document.getElementById('ollama-model').value.trim();
+          
+          const url = `${baseUrl}/api/chat`;
+          const response = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              model,
+              messages: [
+                { role: "system", content: systemPrompt },
+                { role: "user", content: `Por favor, evalúa y optimiza el siguiente prompt:\n\n${userPrompt}` }
+              ],
+              stream: false
+            })
+          });
+          
+          if (!response.ok) {
+            throw new Error(`Ollama retornó HTTP ${response.status}. Verifica que Ollama esté corriendo localmente.`);
+          }
+          
+          const data = await response.json();
+          responseText = data.message?.content;
+          if (!responseText) {
+            throw new Error("Respuesta vacía de la API local de Ollama.");
+          }
+        }
+        
+        statusEl.innerText = "¡Evaluación finalizada!";
+        
+        const critContainer = document.getElementById('ai-result-critique');
+        const improvedTextarea = document.getElementById('ai-improved-text');
+        
+        const match = responseText.match(/<improved_prompt>([\s\S]*?)<\/improved_prompt>/i);
+        
+        if (match) {
+          const improvedPrompt = match[1].trim();
+          let critique = responseText.replace(/<improved_prompt>[\s\S]*?<\/improved_prompt>/i, '').trim();
+          critique = critique.replace(/<\/improved_prompt>/gi, '').replace(/<improved_prompt>/gi, '');
+          critContainer.innerText = critique;
+          improvedTextarea.value = improvedPrompt;
+        } else {
+          const codeBlockMatch = responseText.match(/```(?:markdown|prompt|text)?\n([\s\S]*?)\n```/i);
+          if (codeBlockMatch) {
+            const improvedPrompt = codeBlockMatch[1].trim();
+            critContainer.innerText = responseText;
+            improvedTextarea.value = improvedPrompt;
+          } else {
+            critContainer.innerText = responseText;
+            improvedTextarea.value = responseText;
+          }
+        }
+        
+        switchAiResultTab('critique');
+        
+      } catch (err) {
+        console.error(err);
+        statusEl.innerText = "Error en la evaluación.";
+        alert(`Ocurrió un error al conectar con el proveedor:\n${err.message}`);
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    // Cargar base de datos al inicio
+    window.addEventListener('DOMContentLoaded', () => {
+      loadPrompts();
+      loadAiConfig();
+    });
+  </script>
+</body>
+</html>

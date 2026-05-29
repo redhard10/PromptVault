@@ -1,0 +1,63 @@
+# ─────────────────────────────────────────────
+#  Repositorio de Prácticas: Gestión de Prompts
+#  .gitignore — Archivos excluidos del control
+#  de versiones (no se suben a GitHub)
+# ─────────────────────────────────────────────
+
+# Base de datos SQLite generada en runtime
+# Se crea automáticamente al ejecutar server.py
+prompts.db
+*.db
+*.sqlite
+*.sqlite3
+
+# Caché de Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+*.pyo
+
+# Entornos virtuales Python
+venv/
+env/
+.venv/
+.env/
+ENV/
+
+# Variables de entorno y claves de API
+# ¡NUNCA subas claves secretas a GitHub!
+.env
+.env.local
+.env.*.local
+*.key
+secrets.json
+
+# Archivos generados por el compilador de prompts
+libreria/**/*.json
+
+# Archivos del sistema operativo
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# Editores e IDEs
+.vscode/settings.json
+.vscode/*.log
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+logs/
+
+# Archivos temporales
+*.tmp
+*.temp
