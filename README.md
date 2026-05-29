@@ -22,10 +22,10 @@
 
 ```bash
 # 1. Clona el repositorio en tu computadora
-git clone https://github.com/redhard10/PracticaRepositoriosPrompting.git
+git clone https://github.com/redhard10/PromptVault.git
 
 # 2. Ingresa a la carpeta del proyecto
-cd PracticaRepositoriosPrompting
+cd PromptVault
 
 # 3. Lanza el servidor local
 python server.py
@@ -96,7 +96,7 @@ El **Meta-Prompting** es la técnica donde utilizamos el propio LLM como asisten
 ## 🗂️ Estructura del Repositorio
 
 ```
-PracticaRepositoriosPrompting/
+PromptVault/
 │
 ├── index.html                  # 🖥️  Dashboard interactivo principal
 ├── server.py                   # 🐍  Servidor Python + API REST SQLite
